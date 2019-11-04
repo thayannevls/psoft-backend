@@ -1,12 +1,33 @@
 package psoft.projeto.entities;
 
-public class Usuario {
+/**
+ * User representa um usuário do sistema. Cada usuário tem primeiro nome,
+ * ultimo nome, e-mail, número do cartão de crédito e senha
+ */
+public class User {
 
   private String firstName;
   private String lastName;
   private String email;
   private long cartao;
   private String senha;
+
+  /**
+   * construtor da classe User que inicializa cada atributo com o valor passado a ele
+   *
+   * @param firstName
+   * @param lastName
+   * @param email
+   * @param cartao
+   * @param senha
+   */
+  public User(String firstName, String lastName, String email, long cartao, String senha) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.cartao = cartao;
+    this.senha = senha;
+  }
 
   public String getFirstName() {
     return firstName;
