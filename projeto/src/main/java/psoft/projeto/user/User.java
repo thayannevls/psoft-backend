@@ -1,4 +1,4 @@
-package psoft.projeto.entities;
+package psoft.projeto.user;
 
 /**
  * User representa um usuário do sistema. Cada usuário tem primeiro nome,
@@ -27,6 +27,9 @@ public class User {
     this.email = email;
     this.cartao = cartao;
     this.senha = senha;
+  }
+
+  public User() {
   }
 
   public String getFirstName() {
