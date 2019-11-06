@@ -1,10 +1,12 @@
-package psoft.projeto.user;
+package psoft.projeto.services;
 
 
 import org.springframework.stereotype.Service;
+import psoft.projeto.entities.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -45,4 +47,7 @@ public class UserServices {
   }
 
 
+  public Optional<User> getUser(String email) {
+    return Optional.ofNullable(this.users.get(email));
+  }
 }
