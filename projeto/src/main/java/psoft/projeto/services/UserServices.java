@@ -1,5 +1,6 @@
 package psoft.projeto.user;
 
+
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,32 +23,22 @@ public class UserServices {
     if (!this.users.containsKey(email)) {
       User user = new User(firstName, lastName, email, cartao, senha);
       users.put(email, user);
-      String msg = "";
-      this.sendEmail(user, msg);
+      String msg = "Seja bem vindo(a) ao AJuDE!!";
+      this.sendEmail(user.getEmail(), msg);
     }
   }
 
   public void insertUser(User user) {
     if (!this.users.containsKey(user.getEmail())) {
       users.put(user.getEmail(), user);
-      String msg = "";
-      this.sendEmail(user, msg);
+      String msg = "Seja bem vindo(a) ao AJuDE!!";
+      this.sendEmail(user.getEmail(), msg);
     }
   }
 
-  public User autenticateUser(String email, String senha) {
-    User user = new User();
-    try {
-      if (this.users.get(email).getSenha().equals(senha)) {
-        user = this.users.get(email);
-      }
-    } catch (RuntimeException e){   }
-
-    return user;
-  }
 
 
-  private void sendEmail(User user, String message) {
+  private void sendEmail(String email, String message) {
 
 
 

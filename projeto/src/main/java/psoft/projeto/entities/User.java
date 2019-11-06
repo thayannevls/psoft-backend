@@ -10,7 +10,7 @@ public class User {
   private String lastName;
   private String email;
   private long cartao;
-  private String senha;
+  private String token;
 
   /**
    * construtor da classe User que inicializa cada atributo com o valor passado a ele
@@ -19,14 +19,14 @@ public class User {
    * @param lastName
    * @param email
    * @param cartao
-   * @param senha
+   * @param token
    */
-  public User(String firstName, String lastName, String email, long cartao, String senha) {
+  public User(String firstName, String lastName, String email, long cartao, String token) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.cartao = cartao;
-    this.senha = senha;
+    this.token = token;
   }
 
   public User() {
@@ -64,11 +64,15 @@ public class User {
     this.cartao = cartao;
   }
 
-  public String getSenha() {
-    return senha;
+  public String getToken() {
+    return this.token;
   }
 
-  public void setSenha(String senha) {
-    this.senha = senha;
+  public void setToken(String senha) {
+    this.token = senha;
+  }
+
+  public boolean isEmpty(){
+    return this.email == null;
   }
 }

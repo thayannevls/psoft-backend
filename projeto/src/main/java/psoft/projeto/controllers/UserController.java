@@ -9,15 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
+
+
+@RequestMapping("/api/v1")
 public class UserController {
 
   @Autowired
   private UserServices service;
 
-
 /*
-  @PostMapping("/")
+
+  @PostMapping("/user")
   public ResponseEntity<User> addUser(@RequestBody User user){
     return new ResponseEntity<User> (service.insertUser(user), HttpStatus.OK);
   }
