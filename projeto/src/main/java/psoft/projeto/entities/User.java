@@ -1,4 +1,4 @@
-package psoft.projeto.user;
+package psoft.projeto.entities;
 
 /**
  * User representa um usuário do sistema. Cada usuário tem primeiro nome,
