@@ -25,14 +25,16 @@ public class CampanhaService {
     }
 
 
-    public void cadastrarCampanha(String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, User adm) throws ServletException {
+    public Campanha cadastrarCampanha(String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, User adm) throws ServletException {
+        Campanha campanha = new Campanha();
         if (this.users.containsKey(adm.getEmail())){
             int id = this.generateId();
-            Campanha campanha = new Campanha(id, nomeCurto, identificadorURL, descricao, dataArrecadacao, status, meta, adm);
+            campanha = new Campanha(id, nomeCurto, identificadorURL, descricao, dataArrecadacao, status, meta, adm);
             this.campanhas.put(id, campanha);
         } else{
             throw new ServletException("Usuário não cadastrado!");
         }
+        return campanha;
     }
 
     private int generateId() {
