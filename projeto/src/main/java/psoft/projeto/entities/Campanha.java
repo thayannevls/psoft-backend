@@ -17,9 +17,7 @@ public class Campanha {
     private int likes;
 
 
-    public Campanha(int id, String nomeCurto, String identificadorURL, String descricao,
-                    Date dataArrecadacao, String status, double meta, ArrayList<String> doacaes,
-                    User adm, ArrayList<Comentarios> comentarios, int likes) {
+    public Campanha(int id, String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, User adm) {
         this.id = id;
         this.nomeCurto = nomeCurto;
         this.identificadorURL = identificadorURL;
@@ -27,10 +25,10 @@ public class Campanha {
         this.dataArrecadacao = dataArrecadacao;
         this.status = status;
         this.meta = meta;
-        this.doacaes = doacaes;
+        this.doacaes = new ArrayList<>();
         this.adm = adm;
-        this.comentarios = comentarios;
-        this.likes = likes;
+        this.comentarios = new ArrayList<>();
+        this.likes = 0;
     }
 
     public int getId() {
