@@ -68,8 +68,8 @@ public class User {
     return this.token;
   }
 
-  public void setToken(String senha) {
-    this.token = senha;
+  public void setToken(String token) {
+    this.token = token;
   }
 
   public boolean isEmpty(){
