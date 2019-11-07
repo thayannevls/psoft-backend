@@ -3,6 +3,7 @@ package psoft.projeto.services;
 import psoft.projeto.entities.Campanha;
 import psoft.projeto.entities.User;
 
+import javax.servlet.ServletException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +25,14 @@ public class CampanhaService {
     }
 
 
-    public void cadastrarCampanha(String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, User adm){
-        int id = this.generateId();
-        Campanha campanha = new Campanha(id, nomeCurto, identificadorURL, descricao, dataArrecadacao, status, meta, adm);
-        this.campanhas.put(id, campanha);
+    public void cadastrarCampanha(String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, User adm) throws ServletException {
+        if (this.users.containsKey(adm.getEmail())){
+            int id = this.generateId();
+            Campanha campanha = new Campanha(id, nomeCurto, identificadorURL, descricao, dataArrecadacao, status, meta, adm);
+            this.campanhas.put(id, campanha);
+        } else{
+            throw new ServletException("Usuário não cadastrado!");
+        }
     }
 
     private int generateId() {
