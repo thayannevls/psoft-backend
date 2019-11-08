@@ -31,6 +31,9 @@ public class Campanha {
         this.likes = 0;
     }
 
+    public Campanha() {
+    }
+
     public int getId() {
         return id;
     }
