@@ -13,6 +13,10 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository<Usuario, String> usuarioDAO;
 
+	public UsuarioService(UsuarioRepository<Usuario, String> usuarioDAO) {
+		this.usuarioDAO = usuarioDAO;
+	}
+
 	public Usuario save(Usuario usuario) throws ServletException {
 
 		if (this.usuarioDAO.existsById(usuario.getEmail())) {
