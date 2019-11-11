@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 import psoft.ufcg.api.AJuDE.usuario.UsuarioRepository;
 
@@ -19,25 +20,28 @@ public class CampanhaService {
 
     private UsuarioRepository<Usuario, String> usuarios;
     private CampanhaRepository<Campanha, Integer> campanhas;
-    private int id;
-
 
     public CampanhaService(UsuarioRepository<Usuario, String> usuarios, CampanhaRepository<Campanha, Integer> campanhas) {
         this.usuarios = usuarios;
         this.campanhas = campanhas;
-        this.id = 0;
     }
     	
     public CampanhaService() {}
     
-    public Campanha cadastrarCampanha(Campanha campanha) throws ServletException {
-        if (!this.usuarios.existsById(campanha.getAdm().getEmail())){
+    public Campanha cadastrarCampanha(Campanha campanha, String userToken) throws ServletException {
+        String userEmail = checkUser(userToken);
+        if(this.usuarios.existsById(userEmail)){
             campanha.setNomeCurto(formataNomeCurto(campanha.getNomeCurto()));
             this.campanhas.save(campanha);
         } else{
             throw new ServletException("Usuário não cadastrado!");
         }
         return campanha;
+    }
+
+    private String checkUser(String userToken) throws ServletException {
+        JwtService jwt = new JwtService();
+        return jwt.getTokenSubject(userToken);
     }
 
     private String formataNomeCurto(String nome) {
