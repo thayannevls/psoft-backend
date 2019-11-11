@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import psoft.ufcg.api.AJuDE.auth.JwtService;
 
+import javax.servlet.ServletException;
+
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -22,6 +24,11 @@ public class UsuarioController {
 
 	@PostMapping("/")
 	public ResponseEntity<Usuario> addUser(@RequestBody Usuario user){
-		return new ResponseEntity<Usuario> (this.usuarioService.save(user), HttpStatus.OK);
+		try{
+			return new ResponseEntity<Usuario> (this.usuarioService.save(user), HttpStatus.OK);
+
+		}catch (ServletException e){
+			return new ResponseEntity<Usuario>(HttpStatus.NOT_ACCEPTABLE);
+		}
 	}
 }
