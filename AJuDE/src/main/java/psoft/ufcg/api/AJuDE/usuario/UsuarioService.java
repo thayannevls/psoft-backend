@@ -30,10 +30,12 @@ public class UsuarioService {
 		return usuarioDAO.findById(email);
 	}
 	
-	public Optional<Usuario> remove(String email) {
+	public Optional<Usuario> remove(String email) throws ServletException {
 		Optional<Usuario> usuario = this.getUsuario(email);
 		if(usuario.isPresent()){
 			usuarioDAO.deleteById(email);
+		} else{
+			throw new ServletException("Usuário não cadastrado");
 		}
 		return usuario;
 	}
