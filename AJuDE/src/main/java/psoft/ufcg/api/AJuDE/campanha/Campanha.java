@@ -1,7 +1,8 @@
 package psoft.ufcg.api.AJuDE.campanha;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
@@ -11,27 +12,29 @@ public class Campanha {
     private String nomeCurto;
     private String identificadorURL;
     private String descricao;
-    private Date dataArrecadacao;
+    private Calendar dataArrecadacao;
     private String status;
     private double meta;
+    private double reaisDoados;
     private ArrayList<String> doacaes;
     private Usuario adm;
     private ArrayList<Comentario> comentarios;
     private int likes;
 
 
-    public Campanha(int id, String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, Usuario adm) {
+    public Campanha(int id, String nomeCurto, String identificadorURL, String descricao, Calendar dataArrecadacao, double meta, Usuario adm) {
         this.id = id;
         this.nomeCurto = nomeCurto;
         this.identificadorURL = identificadorURL;
         this.descricao = descricao;
         this.dataArrecadacao = dataArrecadacao;
-        this.status = status;
         this.meta = meta;
-        this.doacaes = new ArrayList<>();
         this.adm = adm;
-        this.comentarios = new ArrayList<>();
         this.likes = 0;
+        this.reaisDoados = 0;
+        this.comentarios = new ArrayList<>();
+        this.doacaes = new ArrayList<>();
+        this.setStatus();
     }
 
     public Campanha() {
@@ -69,11 +72,11 @@ public class Campanha {
         this.descricao = descricao;
     }
 
-    public Date getDataArrecadacao() {
+    public Calendar getDataArrecadacao() {
         return dataArrecadacao;
     }
 
-    public void setDataArrecadacao(Date dataArrecadacao) {
+    public void setDataArrecadacao(Calendar dataArrecadacao) {
         this.dataArrecadacao = dataArrecadacao;
     }
 
@@ -81,9 +84,19 @@ public class Campanha {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus() {
+        Calendar today = Calendar.getInstance();
+        if (today.compareTo(this.dataArrecadacao) < 0){
+            this.status = "ATIVA";
+        } else if (today.compareTo(this.dataArrecadacao) >= 0){
+            if (this.reaisDoados >= this.meta){
+                this.status = "CONCLUIDA";
+            } else {
+                this.status = "VENCIDA";
+            }
+        }
     }
+
 
     public double getMeta() {
         return meta;
@@ -97,7 +110,8 @@ public class Campanha {
         return doacaes;
     }
 
-    public void addDoacaes(String doacao) {
+    public void addDoacaes(String doacao, double valorDoacao) {
+        this.reaisDoados += valorDoacao;
         this.doacaes.add(doacao);
     }
 
