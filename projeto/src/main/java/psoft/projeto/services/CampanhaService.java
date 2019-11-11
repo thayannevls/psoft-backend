@@ -24,6 +24,16 @@ public class CampanhaService {
         this.campanhas = new HashMap<>();
     }
 
+    public Campanha cadastrarCampanha(Campanha campanha) throws ServletException {
+        if (this.users.containsKey(campanha.getAdm().getEmail())){
+            int id = this.generateId();
+            campanha.setNomeCurto(formataNomeCurto(campanha.getNomeCurto()));
+            this.campanhas.put(id, campanha);
+        } else{
+            throw new ServletException("Usuário não cadastrado!");
+        }
+        return campanha;
+    }
 
     public Campanha cadastrarCampanha(String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, User adm) throws ServletException {
         Campanha campanha = new Campanha();
@@ -112,5 +122,6 @@ public class CampanhaService {
 
         return result;
     }
+
 
 }
