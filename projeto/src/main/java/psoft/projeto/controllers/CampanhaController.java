@@ -24,8 +24,8 @@ public class CampanhaController {
     }
 
     @PostMapping("/campanha")
-    public ResponseEntity<Campanha> cadastraCampanha(@RequestBody String nomeCurto, @RequestBody String identificadorURL, @RequestBody String descricao, @RequestBody Date dataArrecadacao, @RequestBody String status, @RequestBody double meta, @RequestBody User adm) throws ServletException {
-        return new ResponseEntity(this.campanhaService.cadastrarCampanha(nomeCurto, identificadorURL, descricao, dataArrecadacao, status, meta, adm), HttpStatus.OK);
+    public ResponseEntity<Campanha> cadastraCampanha(@RequestBody Campanha campanha) throws ServletException {
+        return new ResponseEntity(this.campanhaService.cadastrarCampanha(campanha), HttpStatus.OK);
     }
 
 }
