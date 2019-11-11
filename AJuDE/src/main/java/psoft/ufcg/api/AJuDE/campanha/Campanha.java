@@ -37,6 +37,20 @@ public class Campanha {
         this.setStatus();
     }
 
+    public Campanha(String nomeCurto, String identificadorURL, String descricao, Calendar dataArrecadacao, double meta) {
+        this.nomeCurto = nomeCurto;
+        this.identificadorURL = identificadorURL;
+        this.descricao = descricao;
+        this.dataArrecadacao = dataArrecadacao;
+        this.meta = meta;
+        this.likes = 0;
+        this.reaisDoados = 0;
+        this.comentarios = new ArrayList<>();
+        this.doacaes = new ArrayList<>();
+        this.setStatus();
+        this.adm = new Usuario();
+    }
+
     public Campanha() {
     }
 
@@ -97,6 +111,9 @@ public class Campanha {
         }
     }
 
+    public void encerrarCampanha(){
+        this.status = "ENCERRADA";
+    }
 
     public double getMeta() {
         return meta;
