@@ -26,8 +26,13 @@ public class CampanhaController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Campanha> cadastraCampanha(@RequestBody Campanha campanha) throws ServletException {
-        return new ResponseEntity<Campanha>(this.campanhaService.cadastrarCampanha(campanha), HttpStatus.OK);
+    public ResponseEntity<Campanha> cadastraCampanha(@RequestBody Campanha campanha){
+        try{
+            return new ResponseEntity<Campanha>(this.campanhaService.cadastrarCampanha(campanha), HttpStatus.OK);
+        } catch (ServletException e){
+            return new ResponseEntity<Campanha>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
     }
 
 }
