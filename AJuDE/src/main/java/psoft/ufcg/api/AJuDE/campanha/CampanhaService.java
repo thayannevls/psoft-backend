@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
@@ -30,7 +32,6 @@ public class CampanhaService {
     
     public Campanha cadastrarCampanha(Campanha campanha) throws ServletException {
         if (!this.usuarios.existsById(campanha.getAdm().getEmail())){
-            int id = this.generateId();
             campanha.setNomeCurto(formataNomeCurto(campanha.getNomeCurto()));
             this.campanhas.save(campanha);
         } else{
@@ -39,23 +40,6 @@ public class CampanhaService {
         return campanha;
     }
 
-    public Campanha cadastrarCampanha(String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, Usuario adm) throws ServletException {
-        Campanha campanha = new Campanha();
-        if (!this.usuarios.existsById(adm.getEmail())){
-            int id = this.generateId();
-            nomeCurto = formataNomeCurto(nomeCurto);
-            campanha = new Campanha(id, nomeCurto, identificadorURL, descricao, dataArrecadacao, status, meta, adm);
-            this.campanhas.save(campanha);
-        } else{
-            throw new ServletException("Usuário não cadastrado!");
-        }
-        return campanha;
-    }
-
-    private int generateId() {
-        this.id++;
-        return this.id;
-    }
     private String formataNomeCurto(String nome) {
         nome = trocaPontuacaoPorEspaco(nome);
         nome = substituiCaracteresEspeciais(nome);
