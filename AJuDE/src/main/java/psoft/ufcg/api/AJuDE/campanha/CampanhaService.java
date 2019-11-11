@@ -10,31 +10,29 @@ import javax.servlet.ServletException;
 import org.springframework.stereotype.Service;
 
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
+import psoft.ufcg.api.AJuDE.usuario.UsuarioRepository;
 
 @Service
 public class CampanhaService {
 
-    private Map<String, Usuario> users;
-    private Map<Integer, Campanha> campanhas;
+    private UsuarioRepository<Usuario, String> usuarios;
+    private CampanhaRepository<Campanha, Integer> campanhas;
+    private int id;
 
 
-    public CampanhaService(Map<String, Usuario> users, Map<Integer, Campanha> campanhas) {
-        this.users = users;
+    public CampanhaService(UsuarioRepository<Usuario, String> usuarios, CampanhaRepository<Campanha, Integer> campanhas) {
+        this.usuarios = usuarios;
         this.campanhas = campanhas;
-    }
-
-    public CampanhaService(Map<String, Usuario> users) {
-        this.users = users;
-        this.campanhas = new HashMap<>();
+        this.id = 0;
     }
     	
     public CampanhaService() {}
     
     public Campanha cadastrarCampanha(Campanha campanha) throws ServletException {
-        if (this.users.containsKey(campanha.getAdm().getEmail())){
+        if (!this.usuarios.existsById(campanha.getAdm().getEmail())){
             int id = this.generateId();
             campanha.setNomeCurto(formataNomeCurto(campanha.getNomeCurto()));
-            this.campanhas.put(id, campanha);
+            this.campanhas.save(campanha);
         } else{
             throw new ServletException("Usuário não cadastrado!");
         }
@@ -43,11 +41,11 @@ public class CampanhaService {
 
     public Campanha cadastrarCampanha(String nomeCurto, String identificadorURL, String descricao, Date dataArrecadacao, String status, double meta, Usuario adm) throws ServletException {
         Campanha campanha = new Campanha();
-        if (this.users.containsKey(adm.getEmail())){
+        if (!this.usuarios.existsById(adm.getEmail())){
             int id = this.generateId();
             nomeCurto = formataNomeCurto(nomeCurto);
             campanha = new Campanha(id, nomeCurto, identificadorURL, descricao, dataArrecadacao, status, meta, adm);
-            this.campanhas.put(id, campanha);
+            this.campanhas.save(campanha);
         } else{
             throw new ServletException("Usuário não cadastrado!");
         }
@@ -55,14 +53,8 @@ public class CampanhaService {
     }
 
     private int generateId() {
-        int id = this.campanhas.size()+1;
-        if (this.campanhas.containsKey(id)){
-            id = 1;
-            while (this.campanhas.containsKey(id)){
-                id++;
-            }
-        }
-        return id;
+        this.id++;
+        return this.id;
     }
     private String formataNomeCurto(String nome) {
         nome = trocaPontuacaoPorEspaco(nome);
