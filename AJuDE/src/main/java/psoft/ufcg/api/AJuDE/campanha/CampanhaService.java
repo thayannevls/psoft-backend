@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ public class CampanhaService {
         } else{
             throw new ServletException("Usuário não cadastrado!");
         }
+
         return campanha;
     }
 
@@ -57,6 +60,7 @@ public class CampanhaService {
 
         return nome;
     }
+
     private String retiraEspacosMultiplos(String nome) {
         String result = "";
         int countSpaces = 0;

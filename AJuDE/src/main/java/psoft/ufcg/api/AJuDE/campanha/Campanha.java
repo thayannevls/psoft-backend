@@ -31,9 +31,10 @@ public class Campanha {
     @JoinColumn(name = "email")
     private Usuario adm;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinColumn(name = "idComentario")
-    private Comentario comentarios;
+    @Embedded
+    private List<Comentario> comentarios;
     private int likes;
 
 
@@ -155,14 +156,14 @@ public class Campanha {
         this.adm = adm;
     }
 
-    public ArrayList<Comentario> getComentarios() {
-        EntityManager em = (EntityManager) new Campanha();
-
+    public List<Comentario> getComentarios() {
+        //EntityManager em = (EntityManager) new Campanha();
+        return this.comentarios;
     }
 
     public void addComentarios(String comentario, Usuario user) {
         Comentario newComentario = new Comentario(comentario, user);
-
+        this.comentarios.add(newComentario);
     }
 
     public int getLikes() {
