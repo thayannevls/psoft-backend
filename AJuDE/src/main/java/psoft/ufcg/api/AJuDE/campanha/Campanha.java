@@ -15,7 +15,7 @@ import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.metamodel.Metamodel;
 
 @Entity
-@Table(name = "campanhas")
+@Table(name = "tb_campanha")
 public class Campanha {
   @Id
   private int id;
