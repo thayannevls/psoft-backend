@@ -1,13 +1,14 @@
 package psoft.ufcg.api.AJuDE.campanha;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
+import javax.persistence.*;
 
-
+@Entity
+@Table(name = "campanha")
 public class Campanha {
+    @Id
     private int id;
     private String nomeCurto;
     private String identificadorURL;
@@ -17,7 +18,11 @@ public class Campanha {
     private double meta;
     private double reaisDoados;
     private ArrayList<String> doacaes;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email")
     private Usuario adm;
+
     private ArrayList<Comentario> comentarios;
     private int likes;
 
