@@ -7,36 +7,37 @@ import javax.persistence.*;
 @Entity
 @Table(name = "comentarios")
 public class Comentario {
-    private String comentario;
+  private String comentario;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private Usuario usuario;
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+  @OneToOne(fetch = FetchType.EAGER)
+  private Usuario usuario;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
 
-    public Comentario(String comentario, Usuario usuario) {
-        this.comentario = comentario;
-        this.usuario = usuario;
-    }
+  public Comentario(String comentario, Usuario usuario) {
+    this.comentario = comentario;
+    this.usuario = usuario;
+  }
 
-    public String getComentario() {
-        return comentario;
-    }
+  public String getComentario() {
+    return comentario;
+  }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
+  public void setComentario(String comentario) {
+    this.comentario = comentario;
+  }
 
-    public Usuario getUser() {
-        return usuario;
-    }
+  public Usuario getUser() {
+    return usuario;
+  }
 
-    public void setUser(Usuario user) {
-        this.usuario = user;
-    }
+  public void setUser(Usuario user) {
+    this.usuario = user;
+  }
 
-    @Override
-    public String toString(){
-        return this.usuario.getPrimeiroNome() + " " + this.usuario.getUltimoNome() + " - " + this.usuario.getEmail() + "\n" + this.comentario;
-    }
+  @Override
+  public String toString() {
+    return this.usuario.getPrimeiroNome() + " " + this.usuario.getUltimoNome() + " - " + this.usuario.getEmail() + "\n" + this.comentario;
+  }
 }
