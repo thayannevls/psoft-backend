@@ -5,7 +5,7 @@ import psoft.ufcg.api.AJuDE.usuario.Usuario;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "comentarios")
+@Table(name = "tb_comentario")
 public class Comentario {
   private String comentario;
 
