@@ -2,9 +2,17 @@ package psoft.ufcg.api.AJuDE.campanha;
 
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "comentarios")
 public class Comentario {
     private String comentario;
+
+    @OneToOne(fetch = FetchType.EAGER)
     private Usuario usuario;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     public Comentario(String comentario, Usuario usuario) {
         this.comentario = comentario;

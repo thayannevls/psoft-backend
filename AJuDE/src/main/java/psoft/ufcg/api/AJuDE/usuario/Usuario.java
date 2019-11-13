@@ -2,8 +2,10 @@ package psoft.ufcg.api.AJuDE.usuario;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "usuarios")
 public class Usuario {
 	
 	@Id
@@ -17,13 +19,12 @@ public class Usuario {
 	 * construtor da classe User que inicializa cada atributo com o valor passado a ele
 	 *
 	 * @param primeiroNome
-	 * @param lastName
+	 * @param ultimoNome
 	 * @param email
 	 * @param cartao
 	 * @param senha
 	 */
 	public Usuario(String primeiroNome, String ultimoNome, String email, long cartao, String senha) {
-		super();
 		this.primeiroNome = primeiroNome;
 		this.ultimoNome = ultimoNome;
 		this.email = email;

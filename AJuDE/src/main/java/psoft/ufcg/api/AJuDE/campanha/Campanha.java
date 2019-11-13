@@ -2,11 +2,19 @@ package psoft.ufcg.api.AJuDE.campanha;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.metamodel.Metamodel;
 
 @Entity
-@Table(name = "campanha")
+@Table(name = "campanhas")
 public class Campanha {
     @Id
     private int id;
@@ -23,7 +31,9 @@ public class Campanha {
     @JoinColumn(name = "email")
     private Usuario adm;
 
-    private ArrayList<Comentario> comentarios;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idComentario")
+    private Comentario comentarios;
     private int likes;
 
 
@@ -146,12 +156,13 @@ public class Campanha {
     }
 
     public ArrayList<Comentario> getComentarios() {
-        return comentarios;
+        EntityManager em = (EntityManager) new Campanha();
+
     }
 
     public void addComentarios(String comentario, Usuario user) {
         Comentario newComentario = new Comentario(comentario, user);
-        this.comentarios.add(newComentario);
+
     }
 
     public int getLikes() {

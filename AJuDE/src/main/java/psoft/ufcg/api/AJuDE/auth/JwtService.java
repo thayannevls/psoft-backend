@@ -32,7 +32,7 @@ public class JwtService {
 		return optUsuario.isPresent() && optUsuario.get().getEmail().equals(email);
 	}
 	
-	private String getTokenSubject(String authorizationHeader) throws ServletException {
+	public String getTokenSubject(String authorizationHeader) throws ServletException {
 		if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 			throw new ServletException("Token inválido");
 		}
