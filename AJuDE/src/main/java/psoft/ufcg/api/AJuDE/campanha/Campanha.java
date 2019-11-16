@@ -22,7 +22,7 @@ public class Campanha {
   private String nomeCurto;
   private String identificadorURL;
   private String descricao;
-  private Calendar dataArrecadacao;
+  private String dataArrecadacao; //  dia/mes/ano
   private String status;
   private double meta;
   private double reaisDoados;
@@ -39,7 +39,7 @@ public class Campanha {
   private int likes;
 
 
-  public Campanha(int id, String nomeCurto, String identificadorURL, String descricao, Calendar dataArrecadacao, double meta, Usuario adm) {
+  public Campanha(int id, String nomeCurto, String identificadorURL, String descricao, String dataArrecadacao, double meta, Usuario adm) {
     this.id = id;
     this.nomeCurto = nomeCurto;
     this.identificadorURL = identificadorURL;
@@ -54,7 +54,7 @@ public class Campanha {
     this.setStatus();
   }
 
-  public Campanha(String nomeCurto, String identificadorURL, String descricao, Calendar dataArrecadacao, double meta) {
+  public Campanha(String nomeCurto, String identificadorURL, String descricao, String dataArrecadacao, double meta) {
     this.nomeCurto = nomeCurto;
     this.identificadorURL = identificadorURL;
     this.descricao = descricao;
@@ -103,11 +103,11 @@ public class Campanha {
     this.descricao = descricao;
   }
 
-  public Calendar getDataArrecadacao() {
+  public String getDataArrecadacao() {
     return dataArrecadacao;
   }
 
-  public void setDataArrecadacao(Calendar dataArrecadacao) {
+  public void setDataArrecadacao(String dataArrecadacao) {
     this.dataArrecadacao = dataArrecadacao;
   }
 
@@ -117,16 +117,38 @@ public class Campanha {
   }
 
   public void setStatus() {
-    Calendar today = Calendar.getInstance();
-    if (today.compareTo(this.dataArrecadacao) < 0) {
+    String today = Calendar.getInstance().toString();
+    if (compareDates(this.dataArrecadacao, today) >= 0) {
       this.status = "ATIVA";
-    } else if (today.compareTo(this.dataArrecadacao) >= 0) {
+    } else if (compareDates(this.dataArrecadacao, today) < 0) {
       if (this.reaisDoados >= this.meta) {
         this.status = "CONCLUIDA";
       } else {
         this.status = "VENCIDA";
       }
     }
+  }
+
+  /**
+   * Calcula qual data é mais recente.
+   * Se resultado > 0, então date1 está no futuro em relação a date2
+   * Se resultado < 0, então date1 está no passado em relação a date2
+   * Se resultado == 0, então date1 é igual a date2
+   * @param date1
+   * @param date2
+   * @return
+   */
+  private int compareDates(String date1, String date2) {
+    int result = 0;
+    String[] d1 = date1.split("/");
+    String[] d2 = date2.split("/");
+
+    for (int i = d1.length-1; i >= 0; i++){
+      if (Integer.parseInt(d1[i]) != Integer.parseInt(d2[i])){
+        result = Integer.parseInt(d1[i]) - Integer.parseInt(d2[i]);
+      }
+    }
+    return result;
   }
 
   public void encerrarCampanha() {
