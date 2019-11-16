@@ -2,80 +2,81 @@ package psoft.ufcg.api.AJuDE.usuario;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "tb_usuario")
 public class Usuario {
-	
-	@Id
-	private String email;
-	private String primeiroNome;
-	private String ultimoNome;
-	private long cartao;
-	private String senha;
 
-	/**
-	 * construtor da classe User que inicializa cada atributo com o valor passado a ele
-	 *
-	 * @param primeiroNome
-	 * @param lastName
-	 * @param email
-	 * @param cartao
-	 * @param senha
-	 */
-	public Usuario(String primeiroNome, String ultimoNome, String email, long cartao, String senha) {
-		super();
-		this.primeiroNome = primeiroNome;
-		this.ultimoNome = ultimoNome;
-		this.email = email;
-		this.cartao = cartao;
-		this.senha = senha;
-	}
+  @Id
+  private String email;
+  private String primeiroNome;
+  private String ultimoNome;
+  private long cartao;
+  private String senha;
 
-	public Usuario() {
-		super();
-	}
+  /**
+   * construtor da classe User que inicializa cada atributo com o valor passado a ele
+   *
+   * @param primeiroNome
+   * @param ultimoNome
+   * @param email
+   * @param cartao
+   * @param senha
+   */
+  public Usuario(String primeiroNome, String ultimoNome, String email, long cartao, String senha) {
+    this.primeiroNome = primeiroNome;
+    this.ultimoNome = ultimoNome;
+    this.email = email;
+    this.cartao = cartao;
+    this.senha = senha;
+  }
 
-	public String getPrimeiroNome() {
-		return primeiroNome;
-	}
+  public Usuario() {
+    super();
+  }
 
-	public void setPrimeiroNome(String primeiroNome) {
-		this.primeiroNome = primeiroNome;
-	}
+  public String getPrimeiroNome() {
+    return primeiroNome;
+  }
 
-	public String getUltimoNome() {
-		return ultimoNome;
-	}
+  public void setPrimeiroNome(String primeiroNome) {
+    this.primeiroNome = primeiroNome;
+  }
 
-	public void setUltimoNome(String ultimoNome) {
-		this.ultimoNome = ultimoNome;
-	}
+  public String getUltimoNome() {
+    return ultimoNome;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public void setUltimoNome(String ultimoNome) {
+    this.ultimoNome = ultimoNome;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public long getCartao() {
-		return cartao;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public void setCartao(long cartao) {
-		this.cartao = cartao;
-	}
+  public long getCartao() {
+    return cartao;
+  }
 
-	public String getSenha() {
-		return this.senha;
-	}
+  public void setCartao(long cartao) {
+    this.cartao = cartao;
+  }
 
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
+  public String getSenha() {
+    return this.senha;
+  }
 
-	public boolean isEmpty(){
-		return this.email == null;
-	}
+  public void setSenha(String senha) {
+    this.senha = senha;
+  }
+
+  public boolean isEmpty() {
+    return this.email == null;
+  }
 }
