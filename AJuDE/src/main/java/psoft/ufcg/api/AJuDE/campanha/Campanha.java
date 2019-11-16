@@ -17,7 +17,7 @@ import javax.persistence.metamodel.Metamodel;
 @Entity
 @Table(name = "tb_campanha")
 public class Campanha {
-  @Id
+  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private int id;
   private String nomeCurto;
   private String identificadorURL;
@@ -112,6 +112,7 @@ public class Campanha {
   }
 
   public String getStatus() {
+    this.setStatus();
     return status;
   }
 
