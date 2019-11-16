@@ -22,12 +22,10 @@ public class CampanhaService {
 
   private UsuarioRepository<Usuario, String> usuarios;
   private CampanhaRepository<Campanha, Integer> campanhas;
-  private int id;
 
   public CampanhaService(UsuarioRepository<Usuario, String> usuarios, CampanhaRepository<Campanha, Integer> campanhas) {
     this.usuarios = usuarios;
     this.campanhas = campanhas;
-    this.id = 1;
   }
 
   public CampanhaService() {
@@ -38,7 +36,6 @@ public class CampanhaService {
     if (this.usuarios.existsById(userEmail)) {
       campanha.setNomeCurto(formataNomeCurto(campanha.getNomeCurto()));
       campanha.setAdm(this.usuarios.getOne(userEmail));
-      campanha.setId(this.id++);
       this.campanhas.save(campanha);
     } else {
       throw new ServletException("Usuário não cadastrado!");
