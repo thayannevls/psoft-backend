@@ -26,12 +26,12 @@ public class UsuarioService {
 
   }
 
-  public Optional<Usuario> getUsuario(String email) {
+  public Optional<Usuario> findByEmail(String email) {
     return usuarioDAO.findById(email);
   }
 
   public Optional<Usuario> remove(String email) throws ServletException {
-    Optional<Usuario> usuario = this.getUsuario(email);
+    Optional<Usuario> usuario = this.findByEmail(email);
     if (usuario.isPresent()) {
       usuarioDAO.deleteById(email);
     } else {
