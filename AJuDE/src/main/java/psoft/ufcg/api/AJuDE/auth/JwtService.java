@@ -22,13 +22,13 @@ public class JwtService {
 	public boolean validUsuario(String authorizationHeader) throws ServletException {
 		String subject = getTokenSubject(authorizationHeader);
 
-		return usuarioService.getUsuario(subject).isPresent();
+		return usuarioService.findByEmail(subject).isPresent();
 	}
 	
 	public boolean usuarioHasPermission(String authorizationHeader, String email) throws ServletException {
 		String subject = getTokenSubject(authorizationHeader);
 
-		Optional<Usuario> optUsuario = usuarioService.getUsuario(subject);
+		Optional<Usuario> optUsuario = usuarioService.findByEmail(subject);
 		return optUsuario.isPresent() && optUsuario.get().getEmail().equals(email);
 	}
 	

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import psoft.ufcg.api.AJuDE.exceptions.ResourceNotFoundException;
+import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 import psoft.ufcg.api.AJuDE.usuario.UsuarioService;
 
@@ -26,15 +28,15 @@ public class AuthController {
 	private UsuarioService usuarioService;
 	
 	@PostMapping("/")
-	public LoginResponse authenticate(@RequestBody Usuario usuario) throws ServletException {
-		Optional<Usuario> authUsuario = usuarioService.getUsuario(usuario.getEmail());
+	public LoginResponse authenticate(@RequestBody Usuario usuario) {
+		Optional<Usuario> authUsuario = usuarioService.findByEmail(usuario.getEmail());
 		
 		if(!authUsuario.isPresent()) {
-			throw new ServletException("Usuario nao encontrado!");
+			throw new ResourceNotFoundException("Usuario nao encontrado!");
 		}
 		
 		if(!authUsuario.get().getSenha().equals(usuario.getSenha())) {
-			throw new ServletException("Senha incorreta!");
+			throw new UnauthorizedException("Senha incorreta!");
 		}
 		
 		String token = Jwts.builder().setSubject(authUsuario.get().getEmail()).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)

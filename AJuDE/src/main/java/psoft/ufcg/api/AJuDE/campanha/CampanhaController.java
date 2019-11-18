@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/campanha")
+@RequestMapping("/campanhas")
 public class CampanhaController {
 	
 	@Autowired
@@ -28,7 +28,7 @@ public class CampanhaController {
     @PostMapping("/")
     public ResponseEntity<Campanha> cadastraCampanha(@RequestBody Campanha campanha, @RequestBody String userToken){
         try{
-            return new ResponseEntity<Campanha>(this.campanhaService.cadastrarCampanha(campanha, userToken), HttpStatus.OK);
+            return new ResponseEntity<Campanha>(this.campanhaService.cadastrarCampanha(campanha, userToken), HttpStatus.CREATED);
         } catch (ServletException e){
             return new ResponseEntity<Campanha>(HttpStatus.NOT_ACCEPTABLE);
         }
