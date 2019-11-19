@@ -1,4 +1,4 @@
-package psoft.ufcg.api.AJuDE.campanha;
+package psoft.ufcg.api.AJuDE.campanha.comentario;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
