@@ -48,7 +48,7 @@ public class Campanha {
 
 	private String nome;
 	private String descricao;
-	private String deadline; //  dia/mes/ano
+	private String deadline;
 	private double meta;
 	private double reaisDoados;
 	private boolean encerradaPeloUsuario;

@@ -3,8 +3,6 @@ package psoft.ufcg.api.AJuDE.auth;
 import java.util.Date;
 import java.util.Optional;
 
-import javax.servlet.ServletException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +44,7 @@ public class AuthController {
 	}
 	
 	private class LoginResponse {
+		@SuppressWarnings("unused")
 		public String token;
 		
 		public LoginResponse(String token) {
