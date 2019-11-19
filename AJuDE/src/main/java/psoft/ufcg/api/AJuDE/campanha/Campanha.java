@@ -3,50 +3,58 @@ package psoft.ufcg.api.AJuDE.campanha;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
-
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.metamodel.Metamodel;
 
 @Entity
 @Table(name = "tb_campanha")
 public class Campanha {
   @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private int id;
-  private String nomeCurto;
+  private String nome;
   private String identificadorURL;
   private String descricao;
-  private String dataArrecadacao; //  dia/mes/ano
+  private String deadline; //  dia/mes/ano
   private String status;
   private double meta;
   private double reaisDoados;
+  private int likes;
   private ArrayList<String> doacaes;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "email")
-  private Usuario adm;
+  @JsonIgnore
+  private Usuario dono;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "idComentario")
   @Embedded
+  @JsonIgnore
   private List<Comentario> comentarios;
-  private int likes;
 
 
-  public Campanha(int id, String nomeCurto, String identificadorURL, String descricao, String dataArrecadacao, double meta, Usuario adm) {
+  public Campanha(int id, String nome, String identificadorURL, String descricao, String deadline, double meta, Usuario dono) {
     this.id = id;
-    this.nomeCurto = nomeCurto;
+    this.nome = nome;
     this.identificadorURL = identificadorURL;
     this.descricao = descricao;
-    this.dataArrecadacao = dataArrecadacao;
+    this.deadline = deadline;
     this.meta = meta;
-    this.adm = adm;
+    this.dono = dono;
     this.likes = 0;
     this.reaisDoados = 0;
     this.comentarios = new ArrayList<>();
@@ -54,22 +62,21 @@ public class Campanha {
     this.setStatus();
   }
 
-  public Campanha(String nomeCurto, String identificadorURL, String descricao, String dataArrecadacao, double meta) {
-    this.nomeCurto = nomeCurto;
+  public Campanha(String nome, String identificadorURL, String descricao, String deadline, double meta) {
+    this.nome = nome;
     this.identificadorURL = identificadorURL;
     this.descricao = descricao;
-    this.dataArrecadacao = dataArrecadacao;
+    this.deadline = deadline;
     this.meta = meta;
     this.likes = 0;
     this.reaisDoados = 0;
     this.comentarios = new ArrayList<>();
     this.doacaes = new ArrayList<>();
     this.setStatus();
-    this.adm = new Usuario();
+    this.dono = new Usuario();
   }
 
-  public Campanha() {
-  }
+  public Campanha() {}
 
   public int getId() {
     return id;
@@ -79,12 +86,12 @@ public class Campanha {
     this.id = id;
   }
 
-  public String getNomeCurto() {
-    return nomeCurto;
+  public String getNome() {
+    return nome;
   }
 
-  public void setNomeCurto(String nomeCurto) {
-    this.nomeCurto = nomeCurto;
+  public void setNome(String nome) {
+    this.nome = nome;
   }
 
   public String getIdentificadorURL() {
@@ -103,12 +110,12 @@ public class Campanha {
     this.descricao = descricao;
   }
 
-  public String getDataArrecadacao() {
-    return dataArrecadacao;
+  public String getDeadline() {
+    return deadline;
   }
 
-  public void setDataArrecadacao(String dataArrecadacao) {
-    this.dataArrecadacao = dataArrecadacao;
+  public void setDeadline(String deadline) {
+    this.deadline = deadline;
   }
 
   public String getStatus() {
@@ -117,16 +124,17 @@ public class Campanha {
   }
 
   public void setStatus() {
-    String today = Calendar.getInstance().toString();
-    if (compareDates(this.dataArrecadacao, today) >= 0) {
-      this.status = "ATIVA";
-    } else if (compareDates(this.dataArrecadacao, today) < 0) {
-      if (this.reaisDoados >= this.meta) {
-        this.status = "CONCLUIDA";
-      } else {
-        this.status = "VENCIDA";
-      }
-    }
+//    String today = Calendar.getInstance().toString();
+//    if (compareDates(this.deadline, today) >= 0) {
+//      this.status = "ATIVA";
+//    } else if (compareDates(this.deadline, today) < 0) {
+//      if (this.reaisDoados >= this.meta) {
+//        this.status = "CONCLUIDA";
+//      } else {
+//        this.status = "VENCIDA";
+//      }
+//    }
+	  this.status = "ATIVA";
   }
 
   /**
@@ -172,16 +180,15 @@ public class Campanha {
     this.doacaes.add(doacao);
   }
 
-  public Usuario getAdm() {
-    return adm;
+  public Usuario getDono() {
+    return dono;
   }
 
-  public void setAdm(Usuario adm) {
-    this.adm = adm;
+  public void setDono(Usuario dono) {
+    this.dono = dono;
   }
 
   public List<Comentario> getComentarios() {
-    //EntityManager em = (EntityManager) new Campanha();
     return this.comentarios;
   }
 

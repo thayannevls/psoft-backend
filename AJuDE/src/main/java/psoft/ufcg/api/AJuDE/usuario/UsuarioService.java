@@ -18,12 +18,10 @@ public class UsuarioService {
   }
 
   public Usuario save(Usuario usuario) throws ServletException {
-
     if (this.usuarioDAO.existsById(usuario.getEmail())) {
       throw new ServletException("E-mail já cadastrado");
     }
     return usuarioDAO.save(usuario);
-
   }
 
   public Optional<Usuario> findByEmail(String email) {

@@ -8,4 +8,5 @@ import java.io.Serializable;
 @Repository
 public interface CampanhaRepository<T, ID extends Serializable> extends JpaRepository<Campanha, Integer> {
 
+	Campanha findByIdentificadorURL(String identificadorURL);
 }

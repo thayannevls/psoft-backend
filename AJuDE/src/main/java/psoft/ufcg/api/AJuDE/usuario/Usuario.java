@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_usuario")
 public class Usuario {
@@ -75,7 +77,8 @@ public class Usuario {
   public void setSenha(String senha) {
     this.senha = senha;
   }
-
+  
+  @JsonIgnore
   public boolean isEmpty() {
     return this.email == null;
   }
