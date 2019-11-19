@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import psoft.ufcg.api.AJuDE.auth.JwtService;
+import psoft.ufcg.api.AJuDE.exceptions.ResourceConflictException;
 import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
@@ -46,6 +47,10 @@ public class CampanhaController {
 		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
 		if(!usuario.isPresent())
 			throw new UnauthorizedException("Você precisa estar autenticado para criar uma nova campanha.");
+		
+		if(this.campanhaService.findByIdURL(campanha.getIdentificadorURL()).isEmpty())
+			throw new ResourceConflictException("Campanha já cadastrada com esse identificador de url"); 
+
 		campanha.setDono(usuario.get());
 		return new ResponseEntity<Campanha>(this.campanhaService.save(campanha), HttpStatus.CREATED);
 	}

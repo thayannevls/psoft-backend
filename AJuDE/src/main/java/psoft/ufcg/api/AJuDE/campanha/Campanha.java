@@ -207,5 +207,8 @@ public class Campanha {
 	public void setLikes(int likes) {
 		this.likes = likes;
 	}
-
+	
+	public boolean isEmpty() {
+		return this.identificadorURL.isEmpty();
+	}
 }
