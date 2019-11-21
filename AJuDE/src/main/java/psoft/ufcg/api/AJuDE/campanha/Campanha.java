@@ -187,6 +187,7 @@ public class Campanha {
 		this.likes = likes;
 	}
 	
+	@JsonIgnore
 	public boolean isEmpty() {
 		return this.identificadorURL.isEmpty();
 	}
