@@ -2,6 +2,7 @@ package psoft.ufcg.api.AJuDE.campanha;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,12 @@ public class CampanhaService {
 
 	public Campanha save(Campanha campanha) {
 		return this.campanhaDAO.save(campanha);
+	}
+	
+	public List<Campanha> findBySubstring(String substring, List<String> status) {
+		List<Campanha> matches = this.campanhaDAO.findBySubstring(substring).stream()
+									.filter(c -> status.contains(c.getStatus()))
+									.collect(Collectors.toList());
+		return matches;
 	}
 }

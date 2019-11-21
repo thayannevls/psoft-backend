@@ -1,15 +1,19 @@
 package psoft.ufcg.api.AJuDE.campanha.comentario;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import psoft.ufcg.api.AJuDE.campanha.Campanha;
@@ -17,27 +21,45 @@ import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
 @Entity
 @Table(name = "tb_comentario")
-@Embeddable
 public class Comentario {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "email")
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "usuario_email", nullable = false)
 	@JsonIgnore
 	private Usuario usuario;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idCampanha")
-	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "campanha_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
 	private Campanha campanha;
-
+	
+	@ManyToOne
+	@JsonBackReference(value = "parent")
+	private Comentario parent;
+	
+	@Lob
 	private String comentario;
 
 	public Comentario(String comentario, Usuario usuario) {
 		this.comentario = comentario;
 		this.usuario = usuario;
+	}
+	
+	public Comentario(String comentario) {
+		this.comentario = comentario;
+	}
+	
+	public Comentario() {}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getComentario() {
@@ -62,6 +84,14 @@ public class Comentario {
 
 	public void setCampanha(Campanha campanha) {
 		this.campanha = campanha;
+	}
+
+	public Comentario getParent() {
+		return parent;
+	}
+
+	public void setParent(Comentario parent) {
+		this.parent = parent;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package psoft.ufcg.api.AJuDE.campanha;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,12 +49,18 @@ public class CampanhaController {
 		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
 		if(!usuario.isPresent())
 			throw new UnauthorizedException("Você precisa estar autenticado para criar uma nova campanha.");
-		
-		if(this.campanhaService.findByIdURL(campanha.getIdentificadorURL()).isEmpty())
+		if(this.campanhaService.findByIdURL(campanha.getIdentificadorURL()) != null)
 			throw new ResourceConflictException("Campanha já cadastrada com esse identificador de url"); 
-
 		campanha.setDono(usuario.get());
 		return new ResponseEntity<Campanha>(this.campanhaService.save(campanha), HttpStatus.CREATED);
 	}
-
+	
+	@GetMapping("/search")
+	public ResponseEntity<List<Campanha>> search(@RequestParam(name = "substring") String substring, 
+			@RequestParam(name = "status", required = false) List<String> status) {
+		if(status == null) {
+			status = Arrays.asList("ATIVA");
+		}
+		return new ResponseEntity<List<Campanha>>(this.campanhaService.findBySubstring(substring, status), HttpStatus.OK);
+	}
 }

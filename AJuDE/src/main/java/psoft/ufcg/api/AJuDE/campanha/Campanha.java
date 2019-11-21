@@ -3,26 +3,21 @@ package psoft.ufcg.api.AJuDE.campanha;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.management.InvalidAttributeValueException;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import psoft.ufcg.api.AJuDE.campanha.comentario.Comentario;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
 /**
@@ -36,7 +31,6 @@ import psoft.ufcg.api.AJuDE.usuario.Usuario;
  */
 @Entity
 @Table(name = "tb_campanha")
-
 public class Campanha {
 	@Transient
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -60,12 +54,6 @@ public class Campanha {
 	@JsonIgnore
 	private Usuario dono;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "idComentario")
-	@Embedded
-	@JsonIgnore
-	private List<Comentario> comentarios;
-
 	public Campanha(int id, String nome, String identificadorURL, String descricao, String deadline, double meta, Usuario dono) throws InvalidAttributeValueException {
 		this.id = id;
 		this.nome = nome;
@@ -76,7 +64,6 @@ public class Campanha {
 		this.dono = dono;
 		this.likes = 0;
 		this.reaisDoados = 0;
-		this.comentarios = new ArrayList<>();
 		this.doacaes = new ArrayList<>();
 		this.encerradaPeloUsuario = false;
 	}
@@ -89,7 +76,6 @@ public class Campanha {
 		this.meta = meta;
 		this.likes = 0;
 		this.reaisDoados = 0;
-		this.comentarios = new ArrayList<>();
 		this.doacaes = new ArrayList<>();
 		this.dono = new Usuario();
 		this.encerradaPeloUsuario = false;
@@ -161,7 +147,8 @@ public class Campanha {
 		
 		return "ATIVA";
 	}
-
+	
+	@JsonIgnore
 	public void encerrarCampanha() {
 		this.encerradaPeloUsuario = true;
 	}
@@ -185,20 +172,12 @@ public class Campanha {
 	public ArrayList<String> getDoacaes() {
 		return doacaes;
 	}
-
+	
+	@JsonIgnore
 	public void addDoacaes(String doacao, double valorDoacao) {
 		this.reaisDoados += valorDoacao;
 		this.doacaes.add(doacao);
-	}
-
-	public List<Comentario> getComentarios() {
-		return this.comentarios;
-	}
-
-	public void addComentarios(String comentario, Usuario user) {
-		Comentario newComentario = new Comentario(comentario, user);
-		this.comentarios.add(newComentario);
-	}
+	}	
 
 	public int getLikes() {
 		return likes;

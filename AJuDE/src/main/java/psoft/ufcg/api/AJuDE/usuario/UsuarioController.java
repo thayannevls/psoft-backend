@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceConflictException;
 
 @RestController
@@ -23,9 +22,6 @@ public class UsuarioController {
 
   @Autowired
   private UsuarioService usuarioService;
-  @Autowired
-  private JwtService jwtService;
-
 
   @PostMapping("/")
   public ResponseEntity<Usuario> create(@RequestBody Usuario user) {
@@ -52,7 +48,5 @@ public class UsuarioController {
     return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
 
   }
-
-
 
 }
