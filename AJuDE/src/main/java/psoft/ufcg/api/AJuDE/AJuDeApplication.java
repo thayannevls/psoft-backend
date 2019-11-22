@@ -20,7 +20,8 @@ public class AJuDeApplication {
         CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        @SuppressWarnings("unchecked")
+		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(0);
 
         return bean;
@@ -30,7 +31,7 @@ public class AJuDeApplication {
 //	public FilterRegistrationBean<TokenFilter> filterJwt() {
 //		FilterRegistrationBean<TokenFilter> filterRB = new FilterRegistrationBean<TokenFilter>();
 //		filterRB.setFilter(new TokenFilter());
-//		filterRB.addUrlPatterns("/campanhas/");
+//		filterRB.addUrlPatterns("/campanhas/*", "/");
 //		return filterRB;
 //	}
 
