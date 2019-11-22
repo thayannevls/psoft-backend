@@ -34,19 +34,15 @@ public class TokenFilter extends GenericFilterBean {
       ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED,
               "Token inexistente ou mal formatado!");
       return;
-      // throw new ServletException("Token inexistente ou mal formatado!");
     }
 
-    // Extraindo apenas o token do cabecalho (removendo o prefixo "Bearer ").
     String token = header.substring(TOKEN_INDEX);
     try {
       Jwts.parser().setSigningKey("login do batman").parseClaimsJws(token).getBody();
     } catch (SignatureException | ExpiredJwtException | MalformedJwtException | PrematureJwtException
             | UnsupportedJwtException | IllegalArgumentException e) {
       ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-      return;// a requisição nem precisa passar adiante, retornar já para o cliente pois não
-      // pode prosseguir daqui pra frente
-      // por falta de autorização
+      return;
     }
 
     chain.doFilter(request, response);

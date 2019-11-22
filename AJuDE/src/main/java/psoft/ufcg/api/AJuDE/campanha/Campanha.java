@@ -1,201 +1,194 @@
 package psoft.ufcg.api.AJuDE.campanha;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+
+import javax.management.InvalidAttributeValueException;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.metamodel.Metamodel;
-
+/**
+ * Um objeto campanha modela uma campanha real no sistema AJuDE. Cada campanha possui um ID único, nome, descrição, deadline e uma meta.
+ * Também contém um estado, que pode ser ATIVA, ENCERRADA ou VENCIDA.
+ * 
+ * @author Thayanne Luiza Victor Landim Sousa
+ * @author Vítor Braga Diniz
+ * 
+ * @version 1.0
+ */
 @Entity
 @Table(name = "tb_campanha")
 public class Campanha {
-  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private int id;
-  private String nomeCurto;
-  private String identificadorURL;
-  private String descricao;
-  private String dataArrecadacao; //  dia/mes/ano
-  private String status;
-  private double meta;
-  private double reaisDoados;
-  private ArrayList<String> doacaes;
+	@Transient
+	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "email")
-  private Usuario adm;
+	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private int id;  
+	@Column(unique = true)
+	private String identificadorURL;
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-  @JoinColumn(name = "idComentario")
-  @Embedded
-  private List<Comentario> comentarios;
-  private int likes;
+	private String nome;
+	private String descricao;
+	private String deadline;
+	private double meta;
+	private double reaisDoados;
+	private boolean encerradaPeloUsuario;
+	private int likes;
+	private ArrayList<String> doacaes;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "email")
+	@JsonIgnore
+	private Usuario dono;
 
-  public Campanha(int id, String nomeCurto, String identificadorURL, String descricao, String dataArrecadacao, double meta, Usuario adm) {
-    this.id = id;
-    this.nomeCurto = nomeCurto;
-    this.identificadorURL = identificadorURL;
-    this.descricao = descricao;
-    this.dataArrecadacao = dataArrecadacao;
-    this.meta = meta;
-    this.adm = adm;
-    this.likes = 0;
-    this.reaisDoados = 0;
-    this.comentarios = new ArrayList<>();
-    this.doacaes = new ArrayList<>();
-    this.setStatus();
-  }
+	public Campanha(int id, String nome, String identificadorURL, String descricao, String deadline, double meta, Usuario dono) throws InvalidAttributeValueException {
+		this.id = id;
+		this.nome = nome;
+		this.identificadorURL = identificadorURL;
+		this.descricao = descricao;
+		this.setDeadline(deadline);
+		this.meta = meta;
+		this.dono = dono;
+		this.likes = 0;
+		this.reaisDoados = 0;
+		this.doacaes = new ArrayList<>();
+		this.encerradaPeloUsuario = false;
+	}
 
-  public Campanha(String nomeCurto, String identificadorURL, String descricao, String dataArrecadacao, double meta) {
-    this.nomeCurto = nomeCurto;
-    this.identificadorURL = identificadorURL;
-    this.descricao = descricao;
-    this.dataArrecadacao = dataArrecadacao;
-    this.meta = meta;
-    this.likes = 0;
-    this.reaisDoados = 0;
-    this.comentarios = new ArrayList<>();
-    this.doacaes = new ArrayList<>();
-    this.setStatus();
-    this.adm = new Usuario();
-  }
+	public Campanha(String nome, String identificadorURL, String descricao, String deadline, double meta) throws InvalidAttributeValueException {
+		this.nome = nome;
+		this.identificadorURL = identificadorURL;
+		this.descricao = descricao;
+		this.setDeadline(deadline);
+		this.meta = meta;
+		this.likes = 0;
+		this.reaisDoados = 0;
+		this.doacaes = new ArrayList<>();
+		this.dono = new Usuario();
+		this.encerradaPeloUsuario = false;
+	}
 
-  public Campanha() {
-  }
+	public Campanha() {}
 
-  public int getId() {
-    return id;
-  }
+	public int getId() {
+		return id;
+	}
 
-  public void setId(int id) {
-    this.id = id;
-  }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-  public String getNomeCurto() {
-    return nomeCurto;
-  }
+	public String getNome() {
+		return nome;
+	}
 
-  public void setNomeCurto(String nomeCurto) {
-    this.nomeCurto = nomeCurto;
-  }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-  public String getIdentificadorURL() {
-    return identificadorURL;
-  }
+	public String getIdentificadorURL() {
+		return identificadorURL;
+	}
 
-  public void setIdentificadorURL(String identificadorURL) {
-    this.identificadorURL = identificadorURL;
-  }
+	public void setIdentificadorURL(String identificadorURL) {
+		this.identificadorURL = identificadorURL;
+	}
 
-  public String getDescricao() {
-    return descricao;
-  }
+	public String getDescricao() {
+		return descricao;
+	}
 
-  public void setDescricao(String descricao) {
-    this.descricao = descricao;
-  }
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 
-  public String getDataArrecadacao() {
-    return dataArrecadacao;
-  }
+	public String getDeadline() {
+		return deadline;
+	}
 
-  public void setDataArrecadacao(String dataArrecadacao) {
-    this.dataArrecadacao = dataArrecadacao;
-  }
+	public void setDeadline(String deadline) throws InvalidAttributeValueException {
+		this.deadline = deadline;
+		LocalDate deadlineDate = getDeadlineAsDate();
+		if(deadlineDate.isBefore(LocalDate.now())) {
+			throw new InvalidAttributeValueException("Deadline da campanha deve ser uma data válida.");
+		}
+	}
+	
+	private LocalDate getDeadlineAsDate() {
+		return LocalDate.parse(this.deadline, this.dateFormatter);
+	}
 
-  public String getStatus() {
-    this.setStatus();
-    return status;
-  }
+	public String getStatus() {
+		if(this.encerradaPeloUsuario) {
+			return "ENCERRADA";
+		}
+		
+		LocalDate today = LocalDate.now();
+		LocalDate deadline = getDeadlineAsDate();
 
-  public void setStatus() {
-    String today = Calendar.getInstance().toString();
-    if (compareDates(this.dataArrecadacao, today) >= 0) {
-      this.status = "ATIVA";
-    } else if (compareDates(this.dataArrecadacao, today) < 0) {
-      if (this.reaisDoados >= this.meta) {
-        this.status = "CONCLUIDA";
-      } else {
-        this.status = "VENCIDA";
-      }
-    }
-  }
+		if(deadline.isBefore(today)) {
+			if(this.reaisDoados >= this.meta)
+				return "CONCLUIDA";
+			return "VENCIDA";
+		}
+		
+		return "ATIVA";
+	}
+	
+	@JsonIgnore
+	public void encerrarCampanha() {
+		this.encerradaPeloUsuario = true;
+	}
 
-  /**
-   * Calcula qual data é mais recente.
-   * Se resultado > 0, então date1 está no futuro em relação a date2
-   * Se resultado < 0, então date1 está no passado em relação a date2
-   * Se resultado == 0, então date1 é igual a date2
-   * @param date1
-   * @param date2
-   * @return
-   */
-  private int compareDates(String date1, String date2) {
-    int result = 0;
-    String[] d1 = date1.split("/");
-    String[] d2 = date2.split("/");
+	public double getMeta() {
+		return meta;
+	}
 
-    for (int i = d1.length-1; i >= 0; i++){
-      if (Integer.parseInt(d1[i]) != Integer.parseInt(d2[i])){
-        result = Integer.parseInt(d1[i]) - Integer.parseInt(d2[i]);
-      }
-    }
-    return result;
-  }
+	public void setMeta(double meta) {
+		this.meta = meta;
+	}
+	
+	public Usuario getDono() {
+		return dono;
+	}
 
-  public void encerrarCampanha() {
-    this.status = "ENCERRADA";
-  }
+	public void setDono(Usuario dono) {
+		this.dono = dono;
+	}
 
-  public double getMeta() {
-    return meta;
-  }
+	public ArrayList<String> getDoacaes() {
+		return doacaes;
+	}
+	
+	@JsonIgnore
+	public void addDoacaes(String doacao, double valorDoacao) {
+		this.reaisDoados += valorDoacao;
+		this.doacaes.add(doacao);
+	}	
 
-  public void setMeta(double meta) {
-    this.meta = meta;
-  }
+	public int getLikes() {
+		return likes;
+	}
 
-  public ArrayList<String> getDoacaes() {
-    return doacaes;
-  }
-
-  public void addDoacaes(String doacao, double valorDoacao) {
-    this.reaisDoados += valorDoacao;
-    this.doacaes.add(doacao);
-  }
-
-  public Usuario getAdm() {
-    return adm;
-  }
-
-  public void setAdm(Usuario adm) {
-    this.adm = adm;
-  }
-
-  public List<Comentario> getComentarios() {
-    //EntityManager em = (EntityManager) new Campanha();
-    return this.comentarios;
-  }
-
-  public void addComentarios(String comentario, Usuario user) {
-    Comentario newComentario = new Comentario(comentario, user);
-    this.comentarios.add(newComentario);
-  }
-
-  public int getLikes() {
-    return likes;
-  }
-
-  public void setLikes(int likes) {
-    this.likes = likes;
-  }
-
+	public void setLikes(int likes) {
+		this.likes = likes;
+	}
+	
+	@JsonIgnore
+	public boolean isEmpty() {
+		return this.identificadorURL.isEmpty();
+	}
 }

@@ -8,6 +8,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import psoft.ufcg.api.AJuDE.auth.TokenFilter;
+
 @SpringBootApplication
 public class AJuDeApplication {
 	
@@ -18,11 +20,20 @@ public class AJuDeApplication {
         CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        @SuppressWarnings("unchecked")
+		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(0);
 
         return bean;
 	}
+	
+//	@Bean
+//	public FilterRegistrationBean<TokenFilter> filterJwt() {
+//		FilterRegistrationBean<TokenFilter> filterRB = new FilterRegistrationBean<TokenFilter>();
+//		filterRB.setFilter(new TokenFilter());
+//		filterRB.addUrlPatterns("/campanhas/*", "/");
+//		return filterRB;
+//	}
 
   public static void main(String[] args) {
     SpringApplication.run(AJuDeApplication.class, args);
