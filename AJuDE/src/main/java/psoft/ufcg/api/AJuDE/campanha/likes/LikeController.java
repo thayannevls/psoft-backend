@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,50 +30,45 @@ public class LikeController {
 	private JwtService jwtService;
 	
 	@GetMapping("/")
-	public ResponseEntity<LikeQuantityResponse> getQuantity(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
+	public ResponseEntity<CampanhaLikesTotalResponse> getQuantity(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = this.jwtService.getUsuarioByToken(header);
 		if(!usuario.isPresent()) {
 			throw new ResourceNotFoundException("Precisa estar autenticado para fazer ação de like.");
 		}
 		Campanha campanha = this.campanhaService.findByIdURL(campanhaIdURL);
 		if(campanha == null) {
-			throw new ResourceNotFoundException("Campanha não encontrada..");
+			throw new ResourceNotFoundException("Campanha não encontrada.");
 		}
 		Like like = new Like(campanha, usuario.get());
-		return new ResponseEntity<LikeQuantityResponse>(new LikeQuantityResponse(this.likeService.getTotalLikes(like)), HttpStatus.OK);
+		return new ResponseEntity<CampanhaLikesTotalResponse>(new CampanhaLikesTotalResponse(this.likeService.getTotalLikes(like)), HttpStatus.OK);
 	}
 	
 	@PostMapping("/")
-	public ResponseEntity<Like> create(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
+	public ResponseEntity<Like> createOrDelete(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = this.jwtService.getUsuarioByToken(header);
 		if(!usuario.isPresent()) {
 			throw new ResourceNotFoundException("Precisa estar autenticado para fazer ação de like.");
 		}
 		Campanha campanha = this.campanhaService.findByIdURL(campanhaIdURL);
 		if(campanha == null) {
-			throw new ResourceNotFoundException("Campanha não encontrada..");
+			throw new ResourceNotFoundException("Campanha não encontrada.");
+		}
+		Like like = new Like(campanha, usuario.get());
+		if(this.likeService.findByCampanhaAndUsuario(campanha, usuario.get()).isPresent()) {
+			this.likeService.delete(campanha, usuario.get());
+			return new ResponseEntity<Like>(like, HttpStatus.OK);
 		}
 		
-		Like like = new Like(campanha, usuario.get());
-		this.likeService.save(like);
+		this.likeService.save(campanha, usuario.get());
 		return new ResponseEntity<Like>(like, HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("/")
-	public ResponseEntity<Like> delete(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
-		
-		
-		return new ResponseEntity<Like>(null);
-	}
-	
-	public class LikeQuantityResponse {
+	public class CampanhaLikesTotalResponse {
 
-	    public Long quantity;
+	    public Long total;
 
-	    public LikeQuantityResponse(Long s) { 
-	       this.quantity = s;
+	    public CampanhaLikesTotalResponse(Long s) { 
+	       this.total = s;
 	    }
-
-	    // get/set omitted...
 	}
 }

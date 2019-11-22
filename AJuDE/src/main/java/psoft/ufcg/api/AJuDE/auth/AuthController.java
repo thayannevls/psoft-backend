@@ -26,7 +26,7 @@ public class AuthController {
 	private UsuarioService usuarioService;
 	
 	@PostMapping("/")
-	public LoginResponse authenticate(@RequestBody Usuario usuario) {
+	public LoginResponseDTO authenticate(@RequestBody Usuario usuario) {
 		Optional<Usuario> authUsuario = usuarioService.findByEmail(usuario.getEmail());
 		
 		if(!authUsuario.isPresent()) {
@@ -40,14 +40,14 @@ public class AuthController {
 		String token = Jwts.builder().setSubject(authUsuario.get().getEmail()).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)
 				.setExpiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000)).compact();
 
-		return new LoginResponse(token);
+		return new LoginResponseDTO(token);
 	}
 	
-	private class LoginResponse {
+	private class LoginResponseDTO {
 		@SuppressWarnings("unused")
 		public String token;
 		
-		public LoginResponse(String token) {
+		public LoginResponseDTO(String token) {
 			this.token = token;
 		}
 	}

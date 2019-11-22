@@ -45,14 +45,18 @@ public class CampanhaController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<Campanha> create(@RequestBody Campanha campanha, @RequestHeader("Authorization") String header) {
+	public ResponseEntity<CampanhaResponseDTO> create(@RequestBody CampanhaDTO campanhaDTO, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
+		Campanha campanha = campanhaDTO.get();
 		if(!usuario.isPresent())
 			throw new UnauthorizedException("Você precisa estar autenticado para criar uma nova campanha.");
 		if(this.campanhaService.findByIdURL(campanha.getIdentificadorURL()) != null)
-			throw new ResourceConflictException("Campanha já cadastrada com esse identificador de url"); 
+			throw new ResourceConflictException("Campanha já cadastrada com esse identificador de URL."); 
 		campanha.setDono(usuario.get());
-		return new ResponseEntity<Campanha>(this.campanhaService.save(campanha), HttpStatus.CREATED);
+
+		return new ResponseEntity<CampanhaResponseDTO>(
+				CampanhaResponseDTO.objToDTO(this.campanhaService.save(campanha)), 
+				HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/search")

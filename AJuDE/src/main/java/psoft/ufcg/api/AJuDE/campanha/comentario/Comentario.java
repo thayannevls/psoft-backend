@@ -1,5 +1,7 @@
 package psoft.ufcg.api.AJuDE.campanha.comentario;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.OnDelete;
@@ -39,6 +42,9 @@ public class Comentario {
 	@ManyToOne
 	@JsonBackReference(value = "parent")
 	private Comentario parent;
+	
+	@OneToMany
+	private List<Comentario> respostas;
 	
 	@Lob
 	private String comentario;
@@ -92,6 +98,19 @@ public class Comentario {
 
 	public void setParent(Comentario parent) {
 		this.parent = parent;
+	}
+
+	public List<Comentario> getRespostas() {
+		return respostas;
+	}
+
+	public void setRespostas(List<Comentario> respostas) {
+		this.respostas = respostas;
+	}
+	
+	@JsonIgnore
+	public void addResposta(Comentario comentario) {
+		this.respostas.add(comentario);
 	}
 
 	@Override

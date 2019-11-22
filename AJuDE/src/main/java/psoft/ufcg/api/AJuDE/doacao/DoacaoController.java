@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +32,10 @@ public class DoacaoController {
 	@Autowired
 	private JwtService jwtService;
 	
-	public ResponseEntity<Doacao> create(@PathVariable String campanhaIdURL, @RequestBody Doacao doacao, 
+	@PostMapping("/")
+	public ResponseEntity<DoacaoResponseDTO> create(@PathVariable String campanhaIdURL, @RequestBody DoacaoDTO doacaoDTO, 
 			@RequestHeader("Authorization") String header) {
-		
+		Doacao doacao = doacaoDTO.get();
 		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
 		if(!usuario.isPresent())
 			throw new UnauthorizedException("Você precisa estar autenticado para fazer uma doação.");
@@ -42,7 +44,7 @@ public class DoacaoController {
 		
 		doacao.setCampanha(campanha);
 		doacao.setDoador(usuario.get());
-		return new ResponseEntity<Doacao>(this.doacaoService.save(doacao), HttpStatus.CREATED);
+		return new ResponseEntity<DoacaoResponseDTO>(DoacaoResponseDTO.objToDTO(this.doacaoService.save(doacao)), HttpStatus.CREATED);
 	}
 	
 	/**

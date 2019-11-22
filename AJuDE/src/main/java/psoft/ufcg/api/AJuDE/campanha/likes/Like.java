@@ -12,8 +12,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import psoft.ufcg.api.AJuDE.campanha.Campanha;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
@@ -62,5 +60,10 @@ public class Like {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	@Override
+	public String toString() {
+		return "Like [id=" + id + ", campanha=" + campanha.getIdentificadorURL() + ", usuario=" + usuario.getEmail() + "]";
 	}
 }
