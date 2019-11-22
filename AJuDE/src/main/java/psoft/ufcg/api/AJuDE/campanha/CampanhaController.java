@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceConflictException;
 import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
+@Api(value = "Campanhas")
 @RestController
 @RequestMapping("/campanhas")
 public class CampanhaController {
@@ -31,7 +34,8 @@ public class CampanhaController {
 
 	@Autowired
 	JwtService jwtService;
-
+	
+	@ApiOperation(value = "Recupera uma campanha através do seu identificador de URL.")
 	@GetMapping("/{identificadorURL}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Campanha> get(@PathVariable String identificadorURL) {
