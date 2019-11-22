@@ -1,5 +1,6 @@
 package psoft.ufcg.api.AJuDE.campanha.comentario;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -52,10 +53,12 @@ public class Comentario {
 	public Comentario(String comentario, Usuario usuario) {
 		this.comentario = comentario;
 		this.usuario = usuario;
+		this.respostas = new ArrayList<Comentario>();
 	}
 	
 	public Comentario(String comentario) {
 		this.comentario = comentario;
+		this.respostas = new ArrayList<Comentario>();
 	}
 	
 	public Comentario() {}

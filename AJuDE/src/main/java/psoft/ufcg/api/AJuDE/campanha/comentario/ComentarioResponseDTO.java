@@ -24,7 +24,6 @@ public class ComentarioResponseDTO {
 	}
 	
 	public List<ComentarioResponseDTO> getRespostas() {
-		System.out.println(this.comentario.getRespostas());
 		return (this.comentario.getRespostas()
 								.stream()
 								.map(c -> objToDTO(c))

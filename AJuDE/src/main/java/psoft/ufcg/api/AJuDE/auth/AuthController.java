@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,9 @@ import psoft.ufcg.api.AJuDE.usuario.UsuarioService;
 public class AuthController {
 	
 	private final String TOKEN_KEY = "segredo";
+
+	@Value("${security.jwt.token.expire-length}")
+	private long tokenExpirationLength;
 	
 	@Autowired
 	private UsuarioService usuarioService;
@@ -38,7 +42,7 @@ public class AuthController {
 		}
 		
 		String token = Jwts.builder().setSubject(authUsuario.get().getEmail()).signWith(SignatureAlgorithm.HS512, TOKEN_KEY)
-				.setExpiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000)).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + tokenExpirationLength)).compact();
 
 		return new LoginResponseDTO(token);
 	}
