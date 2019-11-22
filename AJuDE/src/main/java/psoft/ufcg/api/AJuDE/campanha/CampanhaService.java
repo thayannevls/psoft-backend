@@ -35,4 +35,8 @@ public class CampanhaService {
 									.collect(Collectors.toList());
 		return matches;
 	}
+
+	public List<Campanha> getByUsuarioEmail(String email) {
+		return this.campanhaDAO.findByDonoEmail(email);
+	}
 }

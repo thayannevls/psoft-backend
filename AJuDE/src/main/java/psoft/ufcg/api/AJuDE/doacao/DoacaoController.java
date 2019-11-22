@@ -1,10 +1,13 @@
 package psoft.ufcg.api.AJuDE.doacao;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +23,7 @@ import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
 @RestController
-@RequestMapping("/campanhas/{campanhaId}/doacoes")
+@RequestMapping("/campanhas/{campanhaIdURL}/doacoes")
 public class DoacaoController {
 	
 	@Autowired
@@ -45,6 +48,17 @@ public class DoacaoController {
 		doacao.setCampanha(campanha);
 		doacao.setDoador(usuario.get());
 		return new ResponseEntity<DoacaoResponseDTO>(DoacaoResponseDTO.objToDTO(this.doacaoService.save(doacao)), HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/")
+	public ResponseEntity<List<DoacaoResponseDTO>> getAll(@PathVariable String campanhaIdURL) {
+		getCampanhaByIdURL(campanhaIdURL);
+		List<Doacao> doacoes = this.doacaoService.getByCampanhaIdURL(campanhaIdURL);
+		List<DoacaoResponseDTO> response = doacoes.stream()
+												.map(d -> DoacaoResponseDTO.objToDTO(d))
+												.collect(Collectors.toList());
+		
+		return new ResponseEntity<List<DoacaoResponseDTO>>(response, HttpStatus.OK);
 	}
 	
 	/**

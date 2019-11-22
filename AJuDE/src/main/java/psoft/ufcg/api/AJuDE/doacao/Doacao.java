@@ -42,6 +42,8 @@ public class Doacao {
 	public Doacao(double valor) {
 		super();
 		this.valor = valor;
+		this.campanha = null;
+		this.doador = null;
 	}
 	
 	public Doacao() {}
