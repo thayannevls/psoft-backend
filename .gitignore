@@ -275,5 +275,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
+### DB ###
+dados.mv.db
 # End of https://www.gitignore.io/api/java,linux,macos,maven,windows,eclipse,intellij,visualstudiocode

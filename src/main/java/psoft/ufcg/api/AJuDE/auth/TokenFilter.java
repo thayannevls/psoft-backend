@@ -28,6 +28,11 @@ public class TokenFilter extends GenericFilterBean {
 		chain.doFilter(request, response);
 		return;
     }
+    
+    if (req.getRequestURI().contains("/campanhas/rank")) {
+		chain.doFilter(request, response);
+		return;
+    }
     String header = req.getHeader("Authorization");
 
     if (header == null || !header.startsWith("Bearer ")) {
