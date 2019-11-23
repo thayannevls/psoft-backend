@@ -56,9 +56,13 @@ public class LikeController {
 		Like like = new Like(campanha, usuario.get());
 		if(this.likeService.findByCampanhaAndUsuario(campanha, usuario.get()).isPresent()) {
 			this.likeService.delete(campanha, usuario.get());
+			campanha.removeLike();
+			this.campanhaService.save(campanha);
 			return new ResponseEntity<Like>(like, HttpStatus.OK);
 		}
 		
+		campanha.addLike();
+		this.campanhaService.save(campanha);
 		this.likeService.save(campanha, usuario.get());
 		return new ResponseEntity<Like>(like, HttpStatus.CREATED);
 	}

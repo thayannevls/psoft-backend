@@ -39,4 +39,8 @@ public class CampanhaResponseDTO {
 	public String getDono() {
 		return this.campanha.getDono().getEmail();
 	}
+	
+	public double getDoacoes() {
+		return this.campanha.getReaisDoados();
+	}
 }

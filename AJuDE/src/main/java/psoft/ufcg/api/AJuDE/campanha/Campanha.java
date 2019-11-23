@@ -2,7 +2,6 @@ package psoft.ufcg.api.AJuDE.campanha;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 import javax.management.InvalidAttributeValueException;
 import javax.persistence.Column;
@@ -47,7 +46,6 @@ public class Campanha {
 	private double reaisDoados;
 	private boolean encerradaPeloUsuario;
 	private int likes;
-	private ArrayList<String> doacaes;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "email")
@@ -64,7 +62,6 @@ public class Campanha {
 		this.dono = dono;
 		this.likes = 0;
 		this.reaisDoados = 0;
-		this.doacaes = new ArrayList<>();
 		this.encerradaPeloUsuario = false;
 	}
 
@@ -76,7 +73,6 @@ public class Campanha {
 		this.meta = meta;
 		this.likes = 0;
 		this.reaisDoados = 0;
-		this.doacaes = new ArrayList<>();
 		this.dono = new Usuario();
 		this.encerradaPeloUsuario = false;
 	}
@@ -127,7 +123,8 @@ public class Campanha {
 		}
 	}
 	
-	private LocalDate getDeadlineAsDate() {
+	@JsonIgnore
+	public LocalDate getDeadlineAsDate() {
 		return LocalDate.parse(this.deadline, this.dateFormatter);
 	}
 
@@ -169,22 +166,36 @@ public class Campanha {
 		this.dono = dono;
 	}
 
-	public ArrayList<String> getDoacaes() {
-		return doacaes;
-	}
-	
-	@JsonIgnore
-	public void addDoacaes(String doacao, double valorDoacao) {
-		this.reaisDoados += valorDoacao;
-		this.doacaes.add(doacao);
-	}	
-
 	public int getLikes() {
 		return likes;
 	}
 
 	public void setLikes(int likes) {
 		this.likes = likes;
+	}
+	
+	public double getReaisDoados() {
+		return this.reaisDoados;
+	}
+
+	@JsonIgnore
+	public void addLike() {
+		this.likes ++;
+	}
+	
+	@JsonIgnore
+	public void removeLike() {
+		this.likes --;
+	}
+	
+	@JsonIgnore
+	public void addDoacao(double doacao) {
+		this.reaisDoados += doacao;
+	}
+	
+	@JsonIgnore
+	public double getRestante() {
+		return this.meta - this.reaisDoados;
 	}
 	
 	@JsonIgnore

@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import psoft.ufcg.api.AJuDE.campanha.Campanha;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
@@ -21,14 +23,16 @@ public class Doacao {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "usuario_email", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
 	private Usuario doador;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "campanha_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
 	private Campanha campanha;
 	private double valor;
 

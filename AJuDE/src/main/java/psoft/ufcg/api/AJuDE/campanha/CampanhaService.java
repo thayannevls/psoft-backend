@@ -39,4 +39,20 @@ public class CampanhaService {
 	public List<Campanha> getByUsuarioEmail(String email) {
 		return this.campanhaDAO.findByDonoEmail(email);
 	}
+	
+	public List<Campanha> getRank(String sortMethod) {
+		List<Campanha> ativas = this.campanhaDAO.findAll().stream()
+				.filter(c -> c.getStatus().equals("ATIVA"))
+				.collect(Collectors.toList());
+
+		if(sortMethod == "meta") {
+			ativas.sort((c1, c2) -> Double.compare(c1.getRestante(), c2.getRestante()));
+		} else if(sortMethod == "deadline") {
+			ativas.sort((c1, c2) -> c1.getDeadlineAsDate().compareTo(c2.getDeadlineAsDate()));
+		} else if(sortMethod == "likes") {
+			ativas.sort((c1, c2) -> Integer.compare(c1.getLikes(), c2.getLikes()));
+		}
+		
+		return ativas;
+	}
 }

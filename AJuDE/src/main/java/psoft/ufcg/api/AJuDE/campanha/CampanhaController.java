@@ -45,10 +45,16 @@ public class CampanhaController {
 	
 	@GetMapping("/")
 	public ResponseEntity<List<Campanha>> get() {
-		return new ResponseEntity<List<Campanha>>(this.campanhaService.findAll(), HttpStatus.OK);
+			return new ResponseEntity<List<Campanha>>(this.campanhaService.findAll(), HttpStatus.OK);
 	}
-
-	@PostMapping("/")
+	
+	@GetMapping("/rank")
+	public ResponseEntity<List<Campanha>> getRank(
+			@RequestParam(name = "sort", defaultValue = "meta") String sortMethod) {
+		
+		return new ResponseEntity<List<Campanha>>(this.campanhaService.getRank(sortMethod), HttpStatus.OK);
+	}
+ 	@PostMapping("/")
 	public ResponseEntity<CampanhaResponseDTO> create(@RequestBody CampanhaDTO campanhaDTO, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
 		Campanha campanha = campanhaDTO.get();

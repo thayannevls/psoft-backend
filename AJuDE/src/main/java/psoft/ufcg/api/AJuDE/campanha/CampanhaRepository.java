@@ -17,4 +17,5 @@ public interface CampanhaRepository<T, ID extends Serializable> extends JpaRepos
 	List<Campanha> findBySubstring(@Param("substring") String substring);
 
 	List<Campanha> findByDonoEmail(String email);
+	
 }

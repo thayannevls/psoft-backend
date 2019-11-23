@@ -47,6 +47,8 @@ public class DoacaoController {
 		
 		doacao.setCampanha(campanha);
 		doacao.setDoador(usuario.get());
+		campanha.addDoacao(doacao.getValor());
+		this.campanhaService.save(campanha);
 		return new ResponseEntity<DoacaoResponseDTO>(DoacaoResponseDTO.objToDTO(this.doacaoService.save(doacao)), HttpStatus.CREATED);
 	}
 	

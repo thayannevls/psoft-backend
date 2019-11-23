@@ -11,12 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.GenericFilterBean;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.PrematureJwtException;
 import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 
 public class TokenFilter extends GenericFilterBean {
 
@@ -28,22 +24,24 @@ public class TokenFilter extends GenericFilterBean {
 
     HttpServletRequest req = (HttpServletRequest) request;
 
+    if (req.getRequestURI().contains("/campanhas/") && req.getMethod().equals("GET")) {
+		chain.doFilter(request, response);
+		return;
+    }
     String header = req.getHeader("Authorization");
 
     if (header == null || !header.startsWith("Bearer ")) {
       ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED,
-              "Token inexistente ou mal formatado!");
+              "É necessário estar autenticado para acessar esse recurso.");
       return;
     }
 
     String token = header.substring(TOKEN_INDEX);
     try {
-      Jwts.parser().setSigningKey("login do batman").parseClaimsJws(token).getBody();
-    } catch (SignatureException | ExpiredJwtException | MalformedJwtException | PrematureJwtException
-            | UnsupportedJwtException | IllegalArgumentException e) {
-      ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-      return;
-    }
+      Jwts.parser().setSigningKey("segredo").parseClaimsJws(token).getBody();
+    } catch (SignatureException e) {
+		throw new ServletException("Authorization Token inválido.");
+	}
 
     chain.doFilter(request, response);
   }
