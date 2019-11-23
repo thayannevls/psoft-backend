@@ -135,10 +135,12 @@ public class Campanha {
 		
 		LocalDate today = LocalDate.now();
 		LocalDate deadline = getDeadlineAsDate();
+		
+		if(this.reaisDoados >= this.meta)
+			return "CONCLUIDA";
 
 		if(deadline.isBefore(today)) {
-			if(this.reaisDoados >= this.meta)
-				return "CONCLUIDA";
+			
 			return "VENCIDA";
 		}
 		

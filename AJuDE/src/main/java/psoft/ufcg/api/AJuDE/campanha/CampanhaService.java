@@ -45,11 +45,11 @@ public class CampanhaService {
 				.filter(c -> c.getStatus().equals("ATIVA"))
 				.collect(Collectors.toList());
 
-		if(sortMethod == "meta") {
+		if(sortMethod.equals("meta")) {
 			ativas.sort((c1, c2) -> Double.compare(c1.getRestante(), c2.getRestante()));
-		} else if(sortMethod == "deadline") {
+		} else if(sortMethod.equals("deadline")) {
 			ativas.sort((c1, c2) -> c1.getDeadlineAsDate().compareTo(c2.getDeadlineAsDate()));
-		} else if(sortMethod == "likes") {
+		} else if(sortMethod.equals("likes")) {
 			ativas.sort((c1, c2) -> Integer.compare(c1.getLikes(), c2.getLikes()));
 		}
 		
