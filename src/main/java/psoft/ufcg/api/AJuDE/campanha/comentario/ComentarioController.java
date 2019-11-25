@@ -1,5 +1,6 @@
 package psoft.ufcg.api.AJuDE.campanha.comentario;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,7 +61,8 @@ public class ComentarioController {
 															.filter(c -> c.getParent() == null)
 															.map(c -> ComentarioResponseDTO.objToDTO(c))
 															.collect(Collectors.toList());
-															
+
+
 		return new ResponseEntity<List<ComentarioResponseDTO>>(resposta, HttpStatus.OK);
 	}
 

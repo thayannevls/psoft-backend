@@ -12,4 +12,8 @@ public interface ComentarioRepository<T, ID extends Serializable> extends JpaRep
 	
 	List<Comentario> findByCampanhaIdentificadorURL(String campanhaId);
     Optional<Comentario> findByIdAndCampanhaId(int id, int campanhaId);
+
+    List<Comentario> findByCampanhaIdentificadorURLOrderByIdDesc(String identificadorURL);
+
+
 }

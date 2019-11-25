@@ -1,10 +1,13 @@
 package psoft.ufcg.api.AJuDE.campanha.comentario;
 
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static java.util.Collections.swap;
 
 @Service
 public class ComentarioService {
@@ -17,8 +20,9 @@ public class ComentarioService {
 	}
 
 	public List<Comentario> getAllByCampanhaId(String campanhaIdURL) {
-		return this.comentarioDAO.findByCampanhaIdentificadorURL(campanhaIdURL);
+		return this.comentarioDAO.findByCampanhaIdentificadorURLOrderByIdDesc(campanhaIdURL);
 	}
+
 
 	public Optional<Comentario> findById(int comentarioId) {
 		return this.comentarioDAO.findById(comentarioId);
