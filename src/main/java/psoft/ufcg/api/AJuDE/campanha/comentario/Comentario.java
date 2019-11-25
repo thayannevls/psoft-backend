@@ -47,7 +47,6 @@ public class Comentario {
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<Comentario> respostas;
 	
-	@Lob
 	private String comentario;
 
 	public Comentario(String comentario, Usuario usuario) {

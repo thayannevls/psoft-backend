@@ -121,7 +121,7 @@ public class ComentarioController {
 	private Campanha getCampanhaByIdURL(String identificadorURL) {
 		Campanha campanha = this.campanhaService.findByIdURL(identificadorURL);
 
-		if(campanha.isEmpty()) 
+		if(campanha == null || campanha.isEmpty()) 
 			throw new ResourceNotFoundException("Campanha não existe.");
 
 		return campanha;
