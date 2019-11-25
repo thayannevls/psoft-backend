@@ -7,15 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +15,8 @@ import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceConflictException;
 import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
+
+import javax.management.InvalidAttributeValueException;
 
 @Api(value = "Campanhas")
 @RestController
@@ -75,5 +69,20 @@ public class CampanhaController {
 			status = Arrays.asList("ATIVA");
 		}
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.findBySubstring(substring, status), HttpStatus.OK);
+	}
+
+	@PutMapping("/edit/{identificadorURL}")
+	public ResponseEntity<Campanha> editCampanha(@PathVariable String idURL, @RequestBody CampanhaDTO campanhaDTO){
+		Campanha campanha = this.campanhaService.findByIdURL(idURL);
+		Campanha mudancas = campanhaDTO.get();
+		if (campanha != null){
+			try {
+				return new ResponseEntity<Campanha>(this.campanhaService.editCampanha(campanha, mudancas), HttpStatus.OK);
+			} catch (InvalidAttributeValueException e) {
+				return new ResponseEntity<Campanha>(HttpStatus.NOT_ACCEPTABLE);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
 	}
 }

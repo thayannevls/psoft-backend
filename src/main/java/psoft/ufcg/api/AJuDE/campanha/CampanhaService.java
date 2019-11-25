@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.InvalidAttributeValueException;
+
 @Service
 public class CampanhaService {
 
@@ -20,9 +22,23 @@ public class CampanhaService {
 	public Optional<Campanha> findById(int id) {
 		return this.campanhaDAO.findById(id);
 	}
-	
+
 	public Campanha findByIdURL(String identificadorURL) {
 		return this.campanhaDAO.findByIdentificadorURL(identificadorURL);
+	}
+
+	public Campanha editCampanha(Campanha campanha, Campanha mudancas) throws InvalidAttributeValueException {
+		if (mudancas.getDeadline() != null && !mudancas.getDeadline().equals("")){
+			campanha.setDeadline(mudancas.getDeadline());
+		}
+		if (mudancas.getDescricao() != null && !mudancas.getDescricao().equals("")){
+			campanha.setDescricao(mudancas.getDescricao());
+		}
+		if (mudancas.getMeta() != 0){
+			campanha.setMeta(mudancas.getMeta());
+		}
+		this.campanhaDAO.save(campanha);
+		return campanha;
 	}
 
 	public Campanha save(Campanha campanha) {
