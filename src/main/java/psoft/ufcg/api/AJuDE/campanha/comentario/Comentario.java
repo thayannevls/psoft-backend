@@ -44,7 +44,7 @@ public class Comentario {
 	@JsonBackReference(value = "parent")
 	private Comentario parent;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private List<Comentario> respostas;
 	
 	@Lob
