@@ -23,6 +23,10 @@ public class ComentarioResponseDTO {
 		return this.comentario.getComentario();
 	}
 	
+	public String getUsuario() {
+		return this.comentario.getUsuario().getEmail();
+	}
+	
 	public List<ComentarioResponseDTO> getRespostas() {
 		return (this.comentario.getRespostas()
 								.stream()

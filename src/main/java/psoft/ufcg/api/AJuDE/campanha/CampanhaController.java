@@ -51,7 +51,6 @@ public class CampanhaController {
 	@GetMapping("/rank")
 	public ResponseEntity<List<Campanha>> getRank(
 			@RequestParam(name = "sort", defaultValue = "meta") String sortMethod) {
-		System.out.println(sortMethod);
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.getRank(sortMethod), HttpStatus.OK);
 	}
  	@PostMapping("/")
