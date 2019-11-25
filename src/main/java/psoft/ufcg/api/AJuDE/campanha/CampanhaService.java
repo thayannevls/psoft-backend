@@ -29,6 +29,14 @@ public class CampanhaService {
 		return this.campanhaDAO.save(campanha);
 	}
 	
+	/**
+	 * Filtra campanhas a partir de uma substring e lista de status.
+	 * 
+	 * Detalhe de implementação: O status teve que ser filtrado por fora, pois é um atributo dinâmico da classe e queries dinâmicas não conseguem capturar ele.
+	 * @param substring
+	 * @param status
+	 * @return List<Campanha> Lista de campanhas
+	 */
 	public List<Campanha> findBySubstring(String substring, List<String> status) {
 		List<Campanha> matches = this.campanhaDAO.findBySubstring(substring).stream()
 									.filter(c -> status.contains(c.getStatus()))
