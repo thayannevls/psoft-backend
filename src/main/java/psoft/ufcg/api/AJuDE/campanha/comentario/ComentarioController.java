@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import psoft.ufcg.api.AJuDE.auth.AuthController;
 import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.campanha.Campanha;
 import psoft.ufcg.api.AJuDE.campanha.CampanhaService;
@@ -46,7 +49,11 @@ public class ComentarioController {
 	@Autowired
 	JwtService jwtService;
 
-	@ApiOperation(value = "Cria um novo comentário")
+	@ApiOperation(value = "Cria um novo comentário", notes = "Cria um comentário para uma campanha do sistema", position = 0)
+	@ApiResponses(value = {
+					@ApiResponse(code = 200, message = "Comentario criado"),
+					@ApiResponse(code = 401, message = "Usuário não autorizado")
+	})
 	@PostMapping("/")
 	public ResponseEntity<ComentarioResponseDTO> create(@PathVariable String campanhaIdURL, @RequestBody ComentarioDTO comentarioDTO, 
 			@RequestHeader("Authorization") String header) {
@@ -57,7 +64,11 @@ public class ComentarioController {
 		);
 	}
 
-	@ApiOperation(value = "Recupera todos os comentários de uma única campanha")
+	@ApiOperation(value = "Recupera comentários", notes = "Recupera todos os comentários de uma única campanha", position = 1)
+	@ApiResponses(value = {
+					@ApiResponse(code = 200, message = "Retorna comentários", response = List.class),
+					@ApiResponse(code = 401, message = "Usuário não autorizado")
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<ComentarioResponseDTO>> getAll(@PathVariable String campanhaIdURL) {
 		List<Comentario> comentarios = this.comentarioService.getAllByCampanhaId(campanhaIdURL);
@@ -70,7 +81,11 @@ public class ComentarioController {
 		return new ResponseEntity<List<ComentarioResponseDTO>>(resposta, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Recupera um único comentário")
+	@ApiOperation(value = "Recupera um único comentário", notes = "Recupera um comentário de uma única campanha", position = 2)
+	@ApiResponses(value = {
+					@ApiResponse(code = 200, message = "Retorna comentário específico", response = Comentario.class),
+					@ApiResponse(code = 404, message = "Comentário não encontrado")
+	})
 	@GetMapping("/{comentarioId}")
 	public ResponseEntity<ComentarioResponseDTO> get(@PathVariable int comentarioId) {
 		Optional<Comentario> comentario = this.comentarioService.findById(comentarioId);
@@ -81,7 +96,12 @@ public class ComentarioController {
 														HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Deleta um comentário específico")
+	@ApiOperation(value = "Deleta um comentário específico", notes = "Deleta um comentário específico de uma campanha", position = 3)
+	@ApiResponses(value = {
+					@ApiResponse(code = 200, message = "Retorna comentário específico deletado", response = Comentario.class),
+					@ApiResponse(code = 404, message = "Comentário não encontrado"),
+					@ApiResponse(code = 401, message = "Usuário sem permissão para apagar comentário")
+	})
 	@DeleteMapping("/{comentarioId}")
 	public ResponseEntity<ComentarioResponseDTO> delete(@PathVariable int comentarioId, @RequestHeader("Authorization") String header) {
 		Optional<Comentario> comentario = this.comentarioService.deleteById(comentarioId);
@@ -92,7 +112,13 @@ public class ComentarioController {
 			throw new UnauthorizedException("Usuário não tem permissão para apagar esse comentário.");
 		return new ResponseEntity<ComentarioResponseDTO>(ComentarioResponseDTO.objToDTO(comentario.get()), HttpStatus.OK);
 	}
-	
+
+	@ApiOperation(value = "Cria resposta a um comentário", notes = "Cria resposta a um comentário específico de uma campanha", position = 3)
+	@ApiResponses(value = {
+					@ApiResponse(code = 200, message = "Retorna resposta de comentário", response = Comentario.class),
+					@ApiResponse(code = 404, message = "Comentário pai não encontrado"),
+					@ApiResponse(code = 401, message = "Usuário sem permissão para responder comentário")
+	})
 	@PostMapping("/{comentarioId}")
 	public ResponseEntity<ComentarioResponseDTO> create(@PathVariable String campanhaIdURL, @PathVariable int comentarioId, 
 			@RequestBody ComentarioDTO comentarioDTO, @RequestHeader("Authorization") String header) {
