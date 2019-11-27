@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import psoft.ufcg.api.AJuDE.campanha.Campanha;
+
 @Service
 public class DoacaoService {
 	@Autowired
@@ -20,5 +22,10 @@ public class DoacaoService {
 
 	public List<Doacao> getByUsuarioEmail(String email) {
 		return this.doacaoDAO.findByDoadorEmail(email);
+	}
+	
+	public List<Doacao> getByUsuarioEmail(String email, String substring) {
+		return this.doacaoDAO
+				.findByDoadorEmailAndCampanhaNomeContainsIgnoreCaseOrCampanhaDescricaoContainsIgnoreCase(email, substring, substring);
 	}
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import psoft.ufcg.api.AJuDE.campanha.Campanha;
@@ -94,13 +95,15 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/{email}/participacoes")
-	public ResponseEntity<List<CampanhaResponseDTO>> getParticipacoes(@PathVariable String email) {
+	public ResponseEntity<List<CampanhaResponseDTO>> getParticipacoes(@PathVariable String email, 
+			@RequestParam(name = "substring", required = false) String substring) {
+
 		Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
 		if (!usuario.isPresent()){
 			throw new ResourceNotFoundException("Usuário não encontrado");
 		}
-		
-		List<CampanhaResponseDTO> participacoes = this.usuarioService.getParticipacoes(email).stream()
+
+		List<CampanhaResponseDTO> participacoes = this.usuarioService.getParticipacoes(email, substring).stream()
 																		.map(c -> CampanhaResponseDTO.objToDTO(c))
 																		.collect(Collectors.toList());
 		

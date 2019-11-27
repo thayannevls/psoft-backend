@@ -53,8 +53,15 @@ public class UsuarioService {
 		}
 		return usuario;
 	}
+	
+	public List<Campanha> getParticipacoes(String email, String substring) {
+		if(substring == null)
+			return this.getParticipacoes(email);
+		
+		return this.getParticipacoesWithSubstring(email, substring);
+	}
 
-	public List<Campanha> getParticipacoes(String email) {
+	private List<Campanha> getParticipacoes(String email) {
 		Optional<Usuario> usuario = this.findByEmail(email);
 		if (!usuario.isPresent()) {
 			throw new ResourceNotFoundException("Usuário não cadastrado");
@@ -62,6 +69,22 @@ public class UsuarioService {
 		
 		List<Campanha> participacoes = this.campanhaService.getByUsuarioEmail(email);
 		this.doacaoService.getByUsuarioEmail(email).stream()
+				.forEach(d -> participacoes.add(d.getCampanha()));
+		
+		Set<String> set = new HashSet<>(participacoes.size());
+		participacoes.removeIf(p -> !set.add(p.getIdentificadorURL()));
+
+		return participacoes;
+	}
+	
+	private List<Campanha> getParticipacoesWithSubstring(String email, String substring) {
+		Optional<Usuario> usuario = this.findByEmail(email);
+		if (!usuario.isPresent()) {
+			throw new ResourceNotFoundException("Usuário não cadastrado");
+		}
+		
+		List<Campanha> participacoes = this.campanhaService.getByUsuarioEmail(email, substring);
+		this.doacaoService.getByUsuarioEmail(email, substring).stream()
 				.forEach(d -> participacoes.add(d.getCampanha()));
 		
 		Set<String> set = new HashSet<>(participacoes.size());

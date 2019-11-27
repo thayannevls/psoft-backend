@@ -43,7 +43,7 @@ public class CampanhaService {
 	 * @return List<Campanha> Lista de campanhas
 	 */
 	public List<Campanha> findBySubstring(String substring, List<String> status) {
-		List<Campanha> matches = this.campanhaDAO.findBySubstring(substring).stream()
+		List<Campanha> matches = this.campanhaDAO.findByNomeContainsIgnoreCase(substring).stream()
 				.filter(c -> status.contains(c.getStatus()))
 				.collect(Collectors.toList());
 		return matches;
@@ -87,5 +87,10 @@ public class CampanhaService {
 
 		this.campanhaDAO.save(campanha);
 		return campanha;
+	}
+
+	public List<Campanha> getByUsuarioEmail(String email, String substring) {
+		return this.campanhaDAO
+				.findByDonoEmailAndNomeContainsIgnoreCaseOrDescricaoContainsIgnoreCase(email, substring, substring);
 	}
 }

@@ -13,8 +13,9 @@ public interface CampanhaRepository<T, ID extends Serializable> extends JpaRepos
 
 	Campanha findByIdentificadorURL(String identificadorURL);
 
-	@Query(value="SELECT c FROM Campanha c WHERE c.nome LIKE %:substring%")
-	List<Campanha> findBySubstring(@Param("substring") String substring);
+	List<Campanha> findByNomeContainsIgnoreCase(String substring);
+	
+	List<Campanha> findByDonoEmailAndNomeContainsIgnoreCaseOrDescricaoContainsIgnoreCase(String email, String substringNome, String substringDescricao);
 
 	List<Campanha> findByDonoEmail(String email);
 	
