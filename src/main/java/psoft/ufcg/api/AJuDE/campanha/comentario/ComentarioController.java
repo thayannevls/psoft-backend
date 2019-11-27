@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ import psoft.ufcg.api.AJuDE.usuario.Usuario;
  * 
  * @version 1.0
  */
+@Api(value="comentario")
 @RestController
 @RequestMapping("/campanhas/{campanhaIdURL}/comentarios")
 public class ComentarioController {
@@ -43,6 +46,7 @@ public class ComentarioController {
 	@Autowired
 	JwtService jwtService;
 
+	@ApiOperation(value = "Cria um novo comentário")
 	@PostMapping("/")
 	public ResponseEntity<ComentarioResponseDTO> create(@PathVariable String campanhaIdURL, @RequestBody ComentarioDTO comentarioDTO, 
 			@RequestHeader("Authorization") String header) {
@@ -53,6 +57,7 @@ public class ComentarioController {
 		);
 	}
 
+	@ApiOperation(value = "Recupera todos os comentários de uma única campanha")
 	@GetMapping("/")
 	public ResponseEntity<List<ComentarioResponseDTO>> getAll(@PathVariable String campanhaIdURL) {
 		List<Comentario> comentarios = this.comentarioService.getAllByCampanhaId(campanhaIdURL);
@@ -65,6 +70,7 @@ public class ComentarioController {
 		return new ResponseEntity<List<ComentarioResponseDTO>>(resposta, HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Recupera um único comentário")
 	@GetMapping("/{comentarioId}")
 	public ResponseEntity<ComentarioResponseDTO> get(@PathVariable int comentarioId) {
 		Optional<Comentario> comentario = this.comentarioService.findById(comentarioId);
@@ -74,7 +80,8 @@ public class ComentarioController {
 		return new ResponseEntity<ComentarioResponseDTO>(ComentarioResponseDTO.objToDTO(comentario.get()), 
 														HttpStatus.OK);
 	}
-	
+
+	@ApiOperation(value = "Deleta um comentário específico")
 	@DeleteMapping("/{comentarioId}")
 	public ResponseEntity<ComentarioResponseDTO> delete(@PathVariable int comentarioId, @RequestHeader("Authorization") String header) {
 		Optional<Comentario> comentario = this.comentarioService.deleteById(comentarioId);
