@@ -3,6 +3,8 @@ package psoft.ufcg.api.AJuDE.auth;
 import java.util.Date;
 import java.util.Optional;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 import psoft.ufcg.api.AJuDE.usuario.UsuarioService;
 
+@Api(value = "Campanhas")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -28,7 +31,8 @@ public class AuthController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
+	@ApiOperation(value = "Autentica um usuário")
 	@PostMapping("/")
 	public LoginResponseDTO authenticate(@RequestBody Usuario usuario) {
 		Optional<Usuario> authUsuario = usuarioService.findByEmail(usuario.getEmail());
