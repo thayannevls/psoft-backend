@@ -13,10 +13,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceConflictException;
+import psoft.ufcg.api.AJuDE.exceptions.ResourceNotFoundException;
 import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
-import javax.management.InvalidAttributeValueException;
 
 @Api(value = "Campanhas")
 @RestController
@@ -71,18 +71,21 @@ public class CampanhaController {
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.findBySubstring(substring, status), HttpStatus.OK);
 	}
 
-	@PutMapping("/edit/{identificadorURL}")
-	public ResponseEntity<Campanha> editCampanha(@PathVariable String idURL, @RequestBody CampanhaDTO campanhaDTO){
-		Campanha campanha = this.campanhaService.findByIdURL(idURL);
-		Campanha mudancas = campanhaDTO.get();
-		if (campanha != null){
-			try {
-				return new ResponseEntity<Campanha>(this.campanhaService.editCampanha(campanha, mudancas), HttpStatus.OK);
-			} catch (InvalidAttributeValueException e) {
-				return new ResponseEntity<Campanha>(HttpStatus.NOT_ACCEPTABLE);
-			}
+	@PutMapping("/{identificadorURL}")
+	public ResponseEntity<Campanha> updateCampanha(@PathVariable String identificadorURL, @RequestBody CampanhaDTO campanhaDTO, @RequestHeader("Authorization") String header){
+		Campanha campanha = this.campanhaService.findByIdURL(identificadorURL);
+		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
+		if(campanha == null) {
+			throw new ResourceNotFoundException("Campanha não encontrada.");
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+		
+		if(!usuario.isPresent())
+			throw new UnauthorizedException("Usuário precisa estar autenticado para atualizar uma nova campanha.");
+		
+		if(!usuario.get().getEmail().equals(campanha.getDono().getEmail()))
+			throw new UnauthorizedException("Usuárion não possui permissão para atualizar essa campanha.");
+		
+		Campanha mudancas = campanhaDTO.get();
+		return new ResponseEntity<Campanha>(this.campanhaService.update(campanha, mudancas), HttpStatus.OK);
 	}
 }

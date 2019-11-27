@@ -53,15 +53,14 @@ public class UsuarioController {
 		}
 	}
 
-	@GetMapping("/{email}")
-	public ResponseEntity<Usuario> get(@PathVariable String email) {
+	@GetMapping("/{email:.+}")
+	public ResponseEntity<UsuarioResponseDTO> get(@PathVariable String email) {
 		Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
 		if (!usuario.isPresent()){
-			return new ResponseEntity<Usuario>(HttpStatus.NOT_FOUND);
+			throw new ResourceNotFoundException("Usuário não encontrado");
 		}
 
-		return new ResponseEntity<Usuario>(usuario.get(), HttpStatus.OK);
-
+		return new ResponseEntity<UsuarioResponseDTO>(UsuarioResponseDTO.objToDTO(usuario.get()), HttpStatus.OK);
 	}
 
 	@GetMapping("/{email}/doacoes")

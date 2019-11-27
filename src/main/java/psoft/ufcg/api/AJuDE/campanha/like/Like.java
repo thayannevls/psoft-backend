@@ -1,4 +1,4 @@
-package psoft.ufcg.api.AJuDE.campanha.likes;
+package psoft.ufcg.api.AJuDE.campanha.like;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

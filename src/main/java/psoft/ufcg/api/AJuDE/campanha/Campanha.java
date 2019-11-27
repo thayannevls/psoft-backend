@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.management.InvalidAttributeValueException;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,7 +48,7 @@ public class Campanha {
 	private boolean encerradaPeloUsuario;
 	private int likes;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "email")
 	@JsonIgnore
 	private Usuario dono;

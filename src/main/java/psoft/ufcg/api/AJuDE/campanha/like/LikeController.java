@@ -1,4 +1,4 @@
-package psoft.ufcg.api.AJuDE.campanha.likes;
+package psoft.ufcg.api.AJuDE.campanha.like;
 
 import java.util.Optional;
 
@@ -44,7 +44,7 @@ public class LikeController {
 	}
 	
 	@PostMapping("/")
-	public ResponseEntity<Like> createOrDelete(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
+	public ResponseEntity<LikeResponseDTO> likeOrDeslike(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = this.jwtService.getUsuarioByToken(header);
 		if(!usuario.isPresent()) {
 			throw new ResourceNotFoundException("Precisa estar autenticado para fazer ação de like.");
@@ -58,13 +58,15 @@ public class LikeController {
 			this.likeService.delete(campanha, usuario.get());
 			campanha.removeLike();
 			this.campanhaService.save(campanha);
-			return new ResponseEntity<Like>(like, HttpStatus.OK);
+			LikeResponseDTO response = LikeResponseDTO.objToDTO(like, "remove");
+			return new ResponseEntity<LikeResponseDTO>(response, HttpStatus.OK);
 		}
 		
 		campanha.addLike();
 		this.campanhaService.save(campanha);
 		this.likeService.save(campanha, usuario.get());
-		return new ResponseEntity<Like>(like, HttpStatus.CREATED);
+		LikeResponseDTO response = LikeResponseDTO.objToDTO(like, "add");
+		return new ResponseEntity<LikeResponseDTO>(response, HttpStatus.CREATED);
 	}
 	
 	public class CampanhaLikesTotalResponse {

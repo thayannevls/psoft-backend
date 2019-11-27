@@ -18,4 +18,5 @@ public interface CampanhaRepository<T, ID extends Serializable> extends JpaRepos
 
 	List<Campanha> findByDonoEmail(String email);
 	
+	List<Campanha> findByOrderByLikesDesc();
 }

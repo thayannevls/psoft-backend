@@ -24,15 +24,11 @@ public class TokenFilter extends GenericFilterBean {
 
     HttpServletRequest req = (HttpServletRequest) request;
 
-    if (req.getRequestURI().contains("/campanhas/") && req.getMethod().equals("GET")) {
+    if (req.getRequestURI().contains("/campanhas/") && req.getMethod().equals("GET") && !req.getRequestURI().contains("/campanhas/search")) {
 		chain.doFilter(request, response);
 		return;
     }
     
-    if (req.getRequestURI().contains("/campanhas/rank")) {
-		chain.doFilter(request, response);
-		return;
-    }
     String header = req.getHeader("Authorization");
 
     if (header == null || !header.startsWith("Bearer ")) {
