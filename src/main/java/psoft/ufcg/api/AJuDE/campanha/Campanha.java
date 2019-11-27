@@ -2,6 +2,7 @@ package psoft.ufcg.api.AJuDE.campanha;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import javax.management.InvalidAttributeValueException;
 import javax.persistence.CascadeType;
@@ -204,5 +205,17 @@ public class Campanha {
 	@JsonIgnore
 	public boolean isEmpty() {
 		return this.identificadorURL.isEmpty();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o)
+	        return true;
+	    if (o == null)
+	        return false;
+	    if (getClass() != o.getClass())
+	        return false;
+	    Campanha campanha = (Campanha) o;
+	    return Objects.equals(this.identificadorURL, campanha.identificadorURL);
 	}
 }

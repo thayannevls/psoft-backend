@@ -92,5 +92,18 @@ public class UsuarioController {
 		
 		return new ResponseEntity<List<CampanhaResponseDTO>>(response, HttpStatus.OK);
 	}
-
+	
+	@GetMapping("/{email}/participacoes")
+	public ResponseEntity<List<CampanhaResponseDTO>> getParticipacoes(@PathVariable String email) {
+		Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
+		if (!usuario.isPresent()){
+			throw new ResourceNotFoundException("Usuário não encontrado");
+		}
+		
+		List<CampanhaResponseDTO> participacoes = this.usuarioService.getParticipacoes(email).stream()
+																		.map(c -> CampanhaResponseDTO.objToDTO(c))
+																		.collect(Collectors.toList());
+		
+		return new ResponseEntity<List<CampanhaResponseDTO>>(participacoes, HttpStatus.OK);
+	}
 }
