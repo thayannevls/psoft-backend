@@ -69,7 +69,7 @@ public class LikeController {
 		return new ResponseEntity<LikeResponseDTO>(response, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/user")
+	@GetMapping("/usuario")
 	public ResponseEntity<LikeResponseDTO> getLikeByUser(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = this.jwtService.getUsuarioByToken(header);
 		if(!usuario.isPresent()) {
