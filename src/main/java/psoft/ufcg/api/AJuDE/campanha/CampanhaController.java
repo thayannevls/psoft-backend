@@ -36,17 +36,20 @@ public class CampanhaController {
 		Campanha campanha = this.campanhaService.findByIdURL(identificadorURL);		
 		return new ResponseEntity<Campanha>(campanha, HttpStatus.OK);
 	}
-	
+	@ApiOperation(value = "Recupera todas as campanhas")
 	@GetMapping("/")
 	public ResponseEntity<List<Campanha>> get() {
 			return new ResponseEntity<List<Campanha>>(this.campanhaService.findAll(), HttpStatus.OK);
 	}
-	
+
+	@ApiOperation(value = "Monta e envia o ranking de todas as campanhas")
 	@GetMapping("/rank")
 	public ResponseEntity<List<Campanha>> getRank(
 			@RequestParam(name = "sort", defaultValue = "meta") String sortMethod) {
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.getRank(sortMethod), HttpStatus.OK);
 	}
+
+	@ApiOperation(value = "Cria uma nova campanha")
  	@PostMapping("/")
 	public ResponseEntity<CampanhaResponseDTO> create(@RequestBody CampanhaDTO campanhaDTO, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
@@ -61,7 +64,8 @@ public class CampanhaController {
 				CampanhaResponseDTO.objToDTO(this.campanhaService.save(campanha)), 
 				HttpStatus.CREATED);
 	}
-	
+
+	@ApiOperation(value = "Busca uma campanha no sistema")
 	@GetMapping("/search")
 	public ResponseEntity<List<Campanha>> search(@RequestParam(name = "substring") String substring, 
 			@RequestParam(name = "status", required = false) List<String> status) {
@@ -71,6 +75,8 @@ public class CampanhaController {
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.findBySubstring(substring, status), HttpStatus.OK);
 	}
 
+
+	@ApiOperation(value = "Atualiza as informações de uma campanha")
 	@PutMapping("/{identificadorURL}")
 	public ResponseEntity<Campanha> updateCampanha(@PathVariable String identificadorURL, @RequestBody CampanhaDTO campanhaDTO, @RequestHeader("Authorization") String header){
 		Campanha campanha = this.campanhaService.findByIdURL(identificadorURL);
