@@ -69,6 +69,27 @@ public class LikeController {
 		return new ResponseEntity<LikeResponseDTO>(response, HttpStatus.CREATED);
 	}
 	
+	@GetMapping("/user")
+	public ResponseEntity<LikeResponseDTO> getLikeByUser(@PathVariable String campanhaIdURL, @RequestHeader("Authorization") String header) {
+		Optional<Usuario> usuario = this.jwtService.getUsuarioByToken(header);
+		if(!usuario.isPresent()) {
+			throw new ResourceNotFoundException("Precisa estar autenticado para fazer ação de like.");
+		}
+		Campanha campanha = this.campanhaService.findByIdURL(campanhaIdURL);
+		if(campanha == null) {
+			throw new ResourceNotFoundException("Campanha não encontrada.");
+		}
+		
+		Like like = new Like(campanha, usuario.get());
+		if(this.likeService.findByCampanhaAndUsuario(campanha, usuario.get()).isPresent()) {
+			LikeResponseDTO response = LikeResponseDTO.objToDTO(like, "add");
+			return new ResponseEntity<LikeResponseDTO>(response, HttpStatus.OK);
+		}
+		
+		throw new ResourceNotFoundException("Usuário não possui like nessa campanha.");
+	}
+	
+	
 	public class CampanhaLikesTotalResponse {
 
 	    public Long total;

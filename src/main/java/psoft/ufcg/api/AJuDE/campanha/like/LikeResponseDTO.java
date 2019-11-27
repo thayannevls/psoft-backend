@@ -14,6 +14,10 @@ public class LikeResponseDTO {
 		return new LikeResponseDTO(like, action);
 	}
 	
+	public static LikeResponseDTO objToDTO(Like like) {
+		return new LikeResponseDTO(like, "add");
+	}
+	
 	public String getCampanha() {
 		return this.like.getCampanha().getIdentificadorURL();
 	}
