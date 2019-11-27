@@ -18,7 +18,7 @@ import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 import psoft.ufcg.api.AJuDE.usuario.UsuarioService;
 
-
+@Api("Autenticação")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
