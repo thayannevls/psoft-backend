@@ -32,7 +32,7 @@ import psoft.ufcg.api.AJuDE.usuario.Usuario;
  * 
  * @version 1.0
  */
-@Api(value="comentario")
+@Api(value="comentarios")
 @RestController
 @RequestMapping("/campanhas/{campanhaIdURL}/comentarios")
 public class ComentarioController {
