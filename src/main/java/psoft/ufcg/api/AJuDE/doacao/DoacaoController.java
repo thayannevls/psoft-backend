@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import psoft.ufcg.api.AJuDE.exceptions.ResourceNotFoundException;
 import psoft.ufcg.api.AJuDE.exceptions.UnauthorizedException;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
+@Api(value = "doacao")
 @RestController
 @RequestMapping("/campanhas/{campanhaIdURL}/doacoes")
 public class DoacaoController {
@@ -34,7 +37,8 @@ public class DoacaoController {
 	
 	@Autowired
 	private JwtService jwtService;
-	
+
+	@ApiOperation(value = "Permite que um usuário faça uma doação para uma determinada campanha")
 	@PostMapping("/")
 	public ResponseEntity<DoacaoResponseDTO> create(@PathVariable String campanhaIdURL, @RequestBody DoacaoDTO doacaoDTO, 
 			@RequestHeader("Authorization") String header) {
@@ -51,7 +55,8 @@ public class DoacaoController {
 		this.campanhaService.save(campanha);
 		return new ResponseEntity<DoacaoResponseDTO>(DoacaoResponseDTO.objToDTO(this.doacaoService.save(doacao)), HttpStatus.CREATED);
 	}
-	
+
+	@ApiOperation(value = "Recupera todas as doações recebidas por uma campanha")
 	@GetMapping("/")
 	public ResponseEntity<List<DoacaoResponseDTO>> getAll(@PathVariable String campanhaIdURL) {
 		getCampanhaByIdURL(campanhaIdURL);
