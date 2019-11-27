@@ -49,7 +49,7 @@ public class Campanha {
 	private boolean encerradaPeloUsuario;
 	private int likes;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
 	@JoinColumn(name = "email")
 	@JsonIgnore
 	private Usuario dono;
