@@ -75,11 +75,11 @@ public class DoacaoController {
 	 * @return Campanha campanha com o Identificador de URL passado
 	 */
 	private Campanha getCampanhaByIdURL(String identificadorURL) {
-		Campanha campanha = this.campanhaService.findByIdURL(identificadorURL);
+		Optional<Campanha> campanha = this.campanhaService.findByIdURL(identificadorURL);
 
-		if(campanha.isEmpty()) 
+		if(!campanha.isPresent()) 
 			throw new ResourceNotFoundException("Campanha não existe.");
 
-		return campanha;
+		return campanha.get();
 	}
 }

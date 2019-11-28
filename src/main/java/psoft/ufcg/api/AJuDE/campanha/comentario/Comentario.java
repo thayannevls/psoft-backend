@@ -3,6 +3,7 @@ package psoft.ufcg.api.AJuDE.campanha.comentario;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,15 +36,15 @@ public class Comentario {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "campanha_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
 	private Campanha campanha;
 	
 	@ManyToOne
 	@JsonBackReference(value = "parent")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Comentario parent;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Comentario> respostas;
 	
 	private String comentario;

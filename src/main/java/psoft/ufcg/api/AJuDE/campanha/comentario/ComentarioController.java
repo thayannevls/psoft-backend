@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import psoft.ufcg.api.AJuDE.auth.AuthController;
 import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.campanha.Campanha;
 import psoft.ufcg.api.AJuDE.campanha.CampanhaService;
@@ -49,7 +48,7 @@ public class ComentarioController {
 	@Autowired
 	JwtService jwtService;
 
-	@ApiOperation(value = "Cria um novo comentário", notes = "Cria um comentário para uma campanha do sistema", position = 0)
+	@ApiOperation(value = "Cria um novo comentário", notes = "Cria um comentário para uma campanha do sistema")
 	@ApiResponses(value = {
 					@ApiResponse(code = 200, message = "Comentario criado"),
 					@ApiResponse(code = 401, message = "Usuário não autorizado")
@@ -64,7 +63,7 @@ public class ComentarioController {
 		);
 	}
 
-	@ApiOperation(value = "Recupera comentários", notes = "Recupera todos os comentários de uma única campanha", position = 1)
+	@ApiOperation(value = "Recupera comentários", notes = "Recupera todos os comentários de uma única campanha")
 	@ApiResponses(value = {
 					@ApiResponse(code = 200, message = "Retorna comentários", response = List.class),
 					@ApiResponse(code = 401, message = "Usuário não autorizado")
@@ -81,7 +80,7 @@ public class ComentarioController {
 		return new ResponseEntity<List<ComentarioResponseDTO>>(resposta, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Recupera um único comentário", notes = "Recupera um comentário de uma única campanha", position = 2)
+	@ApiOperation(value = "Recupera um único comentário", notes = "Recupera um comentário de uma única campanha")
 	@ApiResponses(value = {
 					@ApiResponse(code = 200, message = "Retorna comentário específico", response = Comentario.class),
 					@ApiResponse(code = 404, message = "Comentário não encontrado")
@@ -96,7 +95,7 @@ public class ComentarioController {
 														HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Deleta um comentário específico", notes = "Deleta um comentário específico de uma campanha", position = 3)
+	@ApiOperation(value = "Deleta um comentário específico", notes = "Deleta um comentário específico de uma campanha")
 	@ApiResponses(value = {
 					@ApiResponse(code = 200, message = "Retorna comentário específico deletado", response = Comentario.class),
 					@ApiResponse(code = 404, message = "Comentário não encontrado"),
@@ -108,12 +107,12 @@ public class ComentarioController {
 		if (!comentario.isPresent()){
 			throw new ResourceNotFoundException("Comentario não encontrado.");
 		}
-		if(jwtService.usuarioHasPermission(header, comentario.get().getUsuario().getEmail()))
+		if(!jwtService.usuarioHasPermission(header, comentario.get().getUsuario().getEmail()))
 			throw new UnauthorizedException("Usuário não tem permissão para apagar esse comentário.");
 		return new ResponseEntity<ComentarioResponseDTO>(ComentarioResponseDTO.objToDTO(comentario.get()), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Cria resposta a um comentário", notes = "Cria resposta a um comentário específico de uma campanha", position = 3)
+	@ApiOperation(value = "Cria resposta a um comentário", notes = "Cria resposta a um comentário específico de uma campanha")
 	@ApiResponses(value = {
 					@ApiResponse(code = 200, message = "Retorna resposta de comentário", response = Comentario.class),
 					@ApiResponse(code = 404, message = "Comentário pai não encontrado"),
@@ -153,11 +152,12 @@ public class ComentarioController {
 	 * @return Campanha campanha com o Identificador de URL passado
 	 */
 	private Campanha getCampanhaByIdURL(String identificadorURL) {
-		Campanha campanha = this.campanhaService.findByIdURL(identificadorURL);
+		Optional<Campanha> campanha = this.campanhaService.findByIdURL(identificadorURL);
+		
+		if(!campanha.isPresent()) {
+			throw new ResourceNotFoundException("Campanha não encontrada.");
+		}
 
-		if(campanha == null || campanha.isEmpty()) 
-			throw new ResourceNotFoundException("Campanha não existe.");
-
-		return campanha;
+		return campanha.get();
 	}
 }

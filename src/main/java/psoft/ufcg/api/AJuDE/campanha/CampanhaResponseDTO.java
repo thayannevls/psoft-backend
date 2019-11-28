@@ -43,4 +43,16 @@ public class CampanhaResponseDTO {
 	public double getDoacoes() {
 		return this.campanha.getReaisDoados();
 	}
+	
+	public int getLikes() {
+		return this.campanha.getLikes();
+	}
+	
+	public String getDeadline() {
+		return this.campanha.getDeadline();
+	}
+	
+	public double getReaisDoados() {
+		return this.campanha.getReaisDoados();
+	}
 }

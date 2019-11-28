@@ -277,4 +277,7 @@ $RECYCLE.BIN/
 *.lnk
 ### DB ###
 dados.mv.db
+
+# intellij
+.idea
 # End of https://www.gitignore.io/api/java,linux,macos,maven,windows,eclipse,intellij,visualstudiocode

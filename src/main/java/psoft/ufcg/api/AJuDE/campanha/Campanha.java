@@ -131,7 +131,7 @@ public class Campanha {
 	}
 
 	public String getStatus() {
-		if(this.encerradaPeloUsuario) {
+		if(this.encerradaPeloUsuario == true) {
 			return "ENCERRADA";
 		}
 		
@@ -152,6 +152,11 @@ public class Campanha {
 	@JsonIgnore
 	public void encerrarCampanha() {
 		this.encerradaPeloUsuario = true;
+	}
+	
+	@JsonIgnore
+	public void ativarCampanha() {
+		this.encerradaPeloUsuario = false;
 	}
 
 	public double getMeta() {
@@ -202,6 +207,14 @@ public class Campanha {
 		return this.meta - this.reaisDoados;
 	}
 	
+	public boolean isEncerradaPeloUsuario() {
+		return encerradaPeloUsuario;
+	}
+
+	public void setEncerradaPeloUsuario(boolean encerradaPeloUsuario) {
+		this.encerradaPeloUsuario = encerradaPeloUsuario;
+	}
+
 	@JsonIgnore
 	public boolean isEmpty() {
 		return this.identificadorURL.isEmpty();

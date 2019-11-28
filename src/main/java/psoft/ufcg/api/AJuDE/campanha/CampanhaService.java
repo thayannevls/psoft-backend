@@ -25,7 +25,7 @@ public class CampanhaService {
 		return this.campanhaDAO.findById(id);
 	}
 
-	public Campanha findByIdURL(String identificadorURL) {
+	public Optional<Campanha> findByIdURL(String identificadorURL) {
 		return this.campanhaDAO.findByIdentificadorURL(identificadorURL);
 	}
 
@@ -70,7 +70,7 @@ public class CampanhaService {
 	}
 
 	public Campanha update(Campanha campanha, Campanha mudancas) {
-		if (mudancas.getDeadline() != null && mudancas.getDeadline().isEmpty()){
+		if (mudancas.getDeadline() != null && !mudancas.getDeadline().isEmpty()){
 			try {
 				campanha.setDeadline(mudancas.getDeadline());
 			} catch (InvalidAttributeValueException e) {
@@ -78,11 +78,19 @@ public class CampanhaService {
 			}
 		}
 
-		if (mudancas.getDescricao() != null && mudancas.getDescricao().isEmpty()){
+		if (mudancas.getDescricao() != null && !mudancas.getDescricao().isEmpty()){
 			campanha.setDescricao(mudancas.getDescricao());
 		}
 		if (mudancas.getMeta() != 0){
 			campanha.setMeta(mudancas.getMeta());
+		}
+		
+		if(mudancas.isEncerradaPeloUsuario()) {
+			campanha.encerrarCampanha();
+		}
+		
+		if(!mudancas.isEncerradaPeloUsuario() && campanha.isEncerradaPeloUsuario()) {
+			campanha.ativarCampanha();
 		}
 
 		this.campanhaDAO.save(campanha);

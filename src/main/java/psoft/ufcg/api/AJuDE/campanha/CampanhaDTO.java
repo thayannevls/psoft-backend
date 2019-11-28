@@ -10,10 +10,18 @@ public class CampanhaDTO {
 	private String deadline;
 	private String descricao;
 	private double meta;
+	private String status;
 	
 	public Campanha get() {
 		try {
-			return new Campanha(nome, identificadorURL, descricao, deadline, meta);
+			Campanha campanha = new Campanha(nome, identificadorURL, descricao, deadline, meta);
+			if(this.status != null && this.status.equals("ENCERRADA")) {
+				campanha.encerrarCampanha();
+			}
+			else if(this.status != null && this.status.equals("ATIVA")) {
+				campanha.ativarCampanha();
+			}
+			return campanha;
 		} catch (InvalidAttributeValueException e) {
 			throw new BadRequestException("Deadline inválida.");
 		}
@@ -57,5 +65,13 @@ public class CampanhaDTO {
 
 	public void setMeta(double meta) {
 		this.meta = meta;
+	}
+	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

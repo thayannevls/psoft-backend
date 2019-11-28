@@ -39,11 +39,11 @@ public class LikeController {
 		if(!usuario.isPresent()) {
 			throw new ResourceNotFoundException("Precisa estar autenticado para fazer ação de like.");
 		}
-		Campanha campanha = this.campanhaService.findByIdURL(campanhaIdURL);
-		if(campanha == null) {
+		Optional<Campanha> campanha = this.campanhaService.findByIdURL(campanhaIdURL);
+		if(!campanha.isPresent()) {
 			throw new ResourceNotFoundException("Campanha não encontrada.");
 		}
-		Like like = new Like(campanha, usuario.get());
+		Like like = new Like(campanha.get(), usuario.get());
 		return new ResponseEntity<CampanhaLikesTotalResponse>(new CampanhaLikesTotalResponse(this.likeService.getTotalLikes(like)), HttpStatus.OK);
 	}
 
@@ -54,10 +54,11 @@ public class LikeController {
 		if(!usuario.isPresent()) {
 			throw new ResourceNotFoundException("Precisa estar autenticado para fazer ação de like.");
 		}
-		Campanha campanha = this.campanhaService.findByIdURL(campanhaIdURL);
-		if(campanha == null) {
+		Optional<Campanha> optCampanha = this.campanhaService.findByIdURL(campanhaIdURL);
+		if(!optCampanha.isPresent()) {
 			throw new ResourceNotFoundException("Campanha não encontrada.");
 		}
+		Campanha campanha = optCampanha.get();
 		Like like = new Like(campanha, usuario.get());
 		if(this.likeService.findByCampanhaAndUsuario(campanha, usuario.get()).isPresent()) {
 			this.likeService.delete(campanha, usuario.get());
@@ -81,13 +82,13 @@ public class LikeController {
 		if(!usuario.isPresent()) {
 			throw new ResourceNotFoundException("Precisa estar autenticado para fazer ação de like.");
 		}
-		Campanha campanha = this.campanhaService.findByIdURL(campanhaIdURL);
-		if(campanha == null) {
+		Optional<Campanha> campanha = this.campanhaService.findByIdURL(campanhaIdURL);
+		if(!campanha.isPresent()) {
 			throw new ResourceNotFoundException("Campanha não encontrada.");
 		}
 		
-		Like like = new Like(campanha, usuario.get());
-		if(this.likeService.findByCampanhaAndUsuario(campanha, usuario.get()).isPresent()) {
+		Like like = new Like(campanha.get(), usuario.get());
+		if(this.likeService.findByCampanhaAndUsuario(campanha.get(), usuario.get()).isPresent()) {
 			LikeResponseDTO response = LikeResponseDTO.objToDTO(like, "add");
 			return new ResponseEntity<LikeResponseDTO>(response, HttpStatus.OK);
 		}
