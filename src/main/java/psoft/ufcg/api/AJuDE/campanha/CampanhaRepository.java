@@ -14,7 +14,9 @@ public interface CampanhaRepository<T, ID extends Serializable> extends JpaRepos
 
 	List<Campanha> findByNomeContainsIgnoreCase(String substring);
 	
-	List<Campanha> findByDonoEmailAndNomeContainsIgnoreCaseOrDescricaoContainsIgnoreCase(String email, String substringNome, String substringDescricao);
+	List<Campanha> findByDonoEmailAndNomeContainsIgnoreCase(String email, String substring);
+	
+	List<Campanha> findByDonoEmailAndDescricaoContainsIgnoreCase(String email, String substring);
 
 	List<Campanha> findByDonoEmail(String email);
 	

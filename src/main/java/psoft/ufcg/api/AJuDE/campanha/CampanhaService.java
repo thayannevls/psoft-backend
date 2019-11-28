@@ -1,7 +1,9 @@
 package psoft.ufcg.api.AJuDE.campanha;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.management.InvalidAttributeValueException;
@@ -98,7 +100,12 @@ public class CampanhaService {
 	}
 
 	public List<Campanha> getByUsuarioEmail(String email, String substring) {
-		return this.campanhaDAO
-				.findByDonoEmailAndNomeContainsIgnoreCaseOrDescricaoContainsIgnoreCase(email, substring, substring);
+		List<Campanha> search = this.campanhaDAO.findByDonoEmailAndDescricaoContainsIgnoreCase(email, substring);
+		search.addAll(this.campanhaDAO.findByDonoEmailAndNomeContainsIgnoreCase(email, substring));
+		
+		Set<String> set = new HashSet<>(search.size());
+		search.removeIf(c -> !set.add(c.getIdentificadorURL()));
+
+		return search;
 	}
 }

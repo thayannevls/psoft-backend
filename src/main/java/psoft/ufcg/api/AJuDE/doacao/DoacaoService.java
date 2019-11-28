@@ -1,11 +1,11 @@
 package psoft.ufcg.api.AJuDE.doacao;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import psoft.ufcg.api.AJuDE.campanha.Campanha;
 
 @Service
 public class DoacaoService {
@@ -25,7 +25,11 @@ public class DoacaoService {
 	}
 	
 	public List<Doacao> getByUsuarioEmail(String email, String substring) {
-		return this.doacaoDAO
-				.findByDoadorEmailAndCampanhaNomeContainsIgnoreCaseOrCampanhaDescricaoContainsIgnoreCase(email, substring, substring);
+		List<Doacao> search = this.doacaoDAO.findByDoadorEmailAndCampanhaNomeContainsIgnoreCase(email, substring);
+		search.addAll(this.doacaoDAO.findByDoadorEmailAndCampanhaDescricaoContainsIgnoreCase(email, substring));
+		Set<String> set = new HashSet<>(search.size());
+		search.removeIf(d -> !set.add(d.getCampanha().getIdentificadorURL()));
+		
+		return search;
 	}
 }
