@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,11 @@ public class DoacaoController {
 	@Autowired
 	private JwtService jwtService;
 
-	@ApiOperation(value = "Permite que um usuário faça uma doação para uma determinada campanha")
+	@ApiOperation(value = "Realiza doação", notes = "Permite que um usuário faça uma doação para uma determinada campanha")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Ranking criado", response = List.class),
+			@ApiResponse(code = 401, message = "Usuário não autenticado")
+	})
 	@PostMapping("/")
 	public ResponseEntity<DoacaoResponseDTO> create(@PathVariable String campanhaIdURL, @RequestBody DoacaoDTO doacaoDTO, 
 			@RequestHeader("Authorization") String header) {
@@ -56,7 +59,11 @@ public class DoacaoController {
 		return new ResponseEntity<DoacaoResponseDTO>(DoacaoResponseDTO.objToDTO(this.doacaoService.save(doacao)), HttpStatus.CREATED);
 	}
 
-	@ApiOperation(value = "Recupera todas as doações recebidas por uma campanha")
+	@ApiOperation(value = "Lista de Doações", notes = "Recupera todas as doações recebidas por uma campanha")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Ranking criado", response = List.class),
+			@ApiResponse(code = 401, message = "Usuário não autenticado")
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<DoacaoResponseDTO>> getAll(@PathVariable String campanhaIdURL) {
 		getCampanhaByIdURL(campanhaIdURL);
