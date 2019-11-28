@@ -3,11 +3,14 @@ package psoft.ufcg.api.AJuDE.usuario;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import psoft.ufcg.api.AJuDE.campanha.Campanha;
@@ -27,15 +30,14 @@ public class UsuarioService {
 	
 	@Autowired
 	private CampanhaService campanhaService;
-
-	public UsuarioService(UsuarioRepository<Usuario, String> usuarioDAO) {
-		this.usuarioDAO = usuarioDAO;
-	}
+	
+    private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
 	public Usuario save(Usuario usuario) throws ServletException {
 		if (this.usuarioDAO.existsById(usuario.getEmail())) {
 			throw new ResourceConflictException("E-mail já cadastrado");
 		}
+		this.enviarEmail(usuario);
 		return usuarioDAO.save(usuario);
 	}
 
@@ -91,4 +93,29 @@ public class UsuarioService {
 
 		return participacoes;
 	}
+	
+	private void enviarEmail(Usuario usuario){
+        Properties props = new Properties();
+
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class",
+                "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        javaMailSender.setUsername("ajudeapppsoft@gmail.com");
+        javaMailSender.setPassword("ajudeapp123");
+        javaMailSender.setJavaMailProperties(props);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject("Seja Bem Vindo ao AJuDE");
+        message.setText("Olá, " + usuario.getPrimeiroNome() + System.lineSeparator()
+                + System.lineSeparator() + "Seja bem vindo ao AJuDE. Comece agora a contribuir e a criar campanhas: " +
+                 System.lineSeparator() + "https://thayannevls.github.io/psoft-frontend"+ System.lineSeparator() + System.lineSeparator() +
+                "Equipe AJuDE.");
+        message.setTo(usuario.getEmail());
+        message.setFrom("AJuDE <ajudeapppsoft@gmail.com>");
+
+        javaMailSender.send(message);
+    }
 }
