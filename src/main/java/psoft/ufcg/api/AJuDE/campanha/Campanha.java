@@ -19,6 +19,8 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import psoft.ufcg.api.AJuDE.usuario.Usuario;
 
 /**
@@ -30,23 +32,38 @@ import psoft.ufcg.api.AJuDE.usuario.Usuario;
  * 
  * @version 1.0
  */
+
+
+@ApiModel(value = "Campanha", description = "Modelo de uma campanha. Esse modelo representa a entidade camapanha no banco de dados e possui as funções básicas de getters e setters para seus atributos.")
 @Entity
 @Table(name = "tb_campanha")
 public class Campanha {
+
+	@ApiModelProperty(value = "Formata data para dd/mm/yyyy", example = "14/08/1998", position = 0)
 	@Transient
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+	@ApiModelProperty(value = "Identificador único da campanha.", example = "231", position = 1)
 	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private int id;  
+	private int id;
+
+	@ApiModelProperty(value = "Identificador URL único da campanha.", example = "campanha-do-milhao", position = 2)
 	@Column(unique = true)
 	private String identificadorURL;
 
+	@ApiModelProperty(value = "Nome da campanha.", example = "Campanha do Milhão", position = 3)
 	private String nome;
+	@ApiModelProperty(value = "Descrição da campanha.", example = "Quero doar 1 milhão para o hospital Laureano em João Pessoa, ajude-me a chegar nesse valor", position = 4)
 	private String descricao;
+	@ApiModelProperty(value = "Data limite para concluir a meta", example = "30/11/2019", position = 5)
 	private String deadline;
+	@ApiModelProperty(value = "Quantidade de dinheiro almejada", example = "1000000", position = 6)
 	private double meta;
+	@ApiModelProperty(value = "Quantidade de dinheiro doada", example = "234529", position = 7)
 	private double reaisDoados;
+	@ApiModelProperty(value = "Identificador de encerramento manual da campanha", example = "false", position = 8)
 	private boolean encerradaPeloUsuario;
+	@ApiModelProperty(value = "Quantidade de likes da campanha", example = "17", position = 9)
 	private int likes;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
