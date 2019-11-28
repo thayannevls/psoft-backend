@@ -8,8 +8,8 @@
 
 ## Conta pré criada
 
-**Usuário:**
-**Senha:**
+**Usuário:** thayanne.sousa@ccc.ufcg.edu.br
+**Senha:** 12345
 
 ## Como rodar
 
