@@ -41,6 +41,7 @@ public class Doacao {
     @OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	private Campanha campanha;
+
 	@ApiModelProperty(value = "Valor doado em reais", example = "0.01", position = 3)
 	private double valor;
 

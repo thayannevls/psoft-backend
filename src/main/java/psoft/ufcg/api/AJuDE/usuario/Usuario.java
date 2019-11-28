@@ -5,16 +5,24 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(value = "Usuário", description = "Modelo de um usuário. Esse modelo representa a entidade usuário no banco de dados e possui as funções básicas de getters e setters para seus atributos.")
 @Entity
 @Table(name = "tb_usuario")
 public class Usuario {
 
+  @ApiModelProperty(value = "E-mail: identificador único do usuário", example = "ze_da_silva@ccc.ufcg.edu.br", position = 0)
   @Id
   private String email;
+  @ApiModelProperty(value = "Primeiro nome do usuário", example = "José", position = 1)
   private String primeiroNome;
+  @ApiModelProperty(value = "Último nome do usuário", example = "Silva", position = 2)
   private String ultimoNome;
+  @ApiModelProperty(value = "Número do cartão", example = "2423492598245982", position = 3)
   private long cartao;
+  @ApiModelProperty(value = "Senha do usuário", example = "senha123", position = 4)
   private String senha;
 
   /**
