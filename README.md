@@ -5,6 +5,7 @@
 - Swagger: https://ajudeapi.herokuapp.com/api/v1/swagger-ui.html#/
 - API: https://ajudeapi.herokuapp.com/api/v1/
 - Frontend: https://thayannevls.github.io/psoft-frontend/
+- Vídeo: https://youtu.be/F6RW42qMXXM
 
 ## Conta pré criada
 
