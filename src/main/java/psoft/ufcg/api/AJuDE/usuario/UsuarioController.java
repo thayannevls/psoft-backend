@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,7 @@ import psoft.ufcg.api.AJuDE.doacao.DoacaoService;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceConflictException;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceNotFoundException;
 
+@Api(value = "Usuários")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -39,6 +44,12 @@ public class UsuarioController {
 	@Autowired
 	private CampanhaService campanhaService;
 
+
+	@ApiOperation(value = "Cadastra usuário", notes = "Cadastra usuário ao sistema")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Usuário cadastrado", response = Usuario.class),
+			@ApiResponse(code = 406, message = "Usuário já cadastrado")
+	})
 	@PostMapping("/")
 	public ResponseEntity<Usuario> create(@RequestBody Usuario user) {
 		Optional<Usuario> usuario = this.usuarioService.findByEmail(user.getEmail());
@@ -54,6 +65,12 @@ public class UsuarioController {
 		}
 	}
 
+
+	@ApiOperation(value = "Recupera usuário", notes = "Recupera um usuário do sistema")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Usuário recuperado", response = Usuario.class),
+			@ApiResponse(code = 404, message = "Usuário não encontrado")
+	})
 	@GetMapping("/{email:.+}")
 	public ResponseEntity<UsuarioResponseDTO> get(@PathVariable String email) {
 		Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
@@ -64,6 +81,11 @@ public class UsuarioController {
 		return new ResponseEntity<UsuarioResponseDTO>(UsuarioResponseDTO.objToDTO(usuario.get()), HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Recupera doações", notes = "Recupera doações feitas por um usuário do sistema")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Usuário recuperado", response = Usuario.class),
+			@ApiResponse(code = 404, message = "Usuário não encontrado")
+	})
 	@GetMapping("/{email}/doacoes")
 	public ResponseEntity<List<DoacaoResponseDTO>> getDoacoes(@PathVariable String email) {
 		Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
@@ -78,7 +100,12 @@ public class UsuarioController {
 		
 		return new ResponseEntity<List<DoacaoResponseDTO>>(response, HttpStatus.OK);
 	}
-	
+
+	@ApiOperation(value = "Recupera campanhas", notes = "Recupera as campanhas de um usuário do sistema")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Usuário recuperado", response = Usuario.class),
+			@ApiResponse(code = 404, message = "Usuário não encontrado")
+	})
 	@GetMapping("/{email}/campanhas")
 	public ResponseEntity<List<CampanhaResponseDTO>> getCampanhas(@PathVariable String email) {
 		Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
@@ -93,7 +120,13 @@ public class UsuarioController {
 		
 		return new ResponseEntity<List<CampanhaResponseDTO>>(response, HttpStatus.OK);
 	}
-	
+
+
+	@ApiOperation(value = "Recupera campanhas que participou", notes = "Recupera as campanhas que um usuário criou ou ajudou")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Usuário recuperado", response = Usuario.class),
+			@ApiResponse(code = 404, message = "Usuário não encontrado")
+	})
 	@GetMapping("/{email}/participacoes")
 	public ResponseEntity<List<CampanhaResponseDTO>> getParticipacoes(@PathVariable String email, 
 			@RequestParam(name = "substring", required = false) String substring) {
