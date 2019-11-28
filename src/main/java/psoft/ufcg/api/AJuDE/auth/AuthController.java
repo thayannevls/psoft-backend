@@ -41,7 +41,6 @@ public class AuthController {
           @ApiResponse(code = 401, message = "Senha fornecida incorreta"),
           @ApiResponse(code = 404, message = "Usuário não encontrado")
   })
-
   @PostMapping("/")
   public LoginResponseDTO authenticate(@RequestBody Usuario usuario) {
     Optional<Usuario> authUsuario = usuarioService.findByEmail(usuario.getEmail());

@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import psoft.ufcg.api.AJuDE.auth.AuthController;
 import psoft.ufcg.api.AJuDE.auth.JwtService;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceConflictException;
 import psoft.ufcg.api.AJuDE.exceptions.ResourceNotFoundException;
@@ -29,7 +32,12 @@ public class CampanhaController {
 	@Autowired
 	JwtService jwtService;
 
-	@ApiOperation(value = "Recupera uma campanha através do seu identificador de URL.")
+	@ApiOperation(value = "Recupera uma campanha", notes = "Recupera uma campanha através do seu identificador de URL.", position = 0)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Campanha encontrada", response = Campanha.class),
+			@ApiResponse(code = 401, message = "Senha fornecida incorreta"),
+			@ApiResponse(code = 404, message = "Campanha não encontrada")
+	})
 	@GetMapping("/{identificadorURL}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<CampanhaResponseDTO> get(@PathVariable String identificadorURL) {
@@ -39,20 +47,33 @@ public class CampanhaController {
 		
 		return new ResponseEntity<CampanhaResponseDTO>(CampanhaResponseDTO.objToDTO(campanha.get()), HttpStatus.OK);
 	}
-	@ApiOperation(value = "Recupera todas as campanhas")
+
+	@ApiOperation(value = "Recupera campanhas", notes = "Recupera todas as campanhas do sistema")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Lista de campanhas retornada", response = List.class)
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<Campanha>> get() {
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.findAll(), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Monta e envia o ranking de todas as campanhas")
+
+	@ApiOperation(value = "Monta ranking de campanhas", notes = "Monta e envia o ranking de todas as campanhas")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Ranking criado", response = List.class)
+	})
 	@GetMapping("/rank")
 	public ResponseEntity<List<Campanha>> getRank(
 			@RequestParam(name = "sort", defaultValue = "meta") String sortMethod) {
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.getRank(sortMethod), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Cria uma nova campanha")
+	@ApiOperation(value = "Cria campanha", notes = "Cria uma nova campanha")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Ranking criado", response = List.class),
+			@ApiResponse(code = 401, message = "Usuário não autenticado"),
+			@ApiResponse(code = 409, message = "Campanha já cadastrada")
+	})
 	@PostMapping("/")
 	public ResponseEntity<CampanhaResponseDTO> create(@RequestBody CampanhaDTO campanhaDTO, @RequestHeader("Authorization") String header) {
 		Optional<Usuario> usuario = jwtService.getUsuarioByToken(header);
@@ -68,7 +89,10 @@ public class CampanhaController {
 				HttpStatus.CREATED);
 	}
 
-	@ApiOperation(value = "Busca uma campanha no sistema")
+	@ApiOperation(value = "Busca campanha", notes = "Busca uma campanha no sistema a partir de uma substring")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Campanha encontrada", response = List.class)
+	})
 	@GetMapping("/search")
 	public ResponseEntity<List<Campanha>> search(@RequestParam(name = "substring") String substring, 
 			@RequestParam(name = "status", required = false) List<String> status) {
@@ -78,7 +102,13 @@ public class CampanhaController {
 		return new ResponseEntity<List<Campanha>>(this.campanhaService.findBySubstring(substring, status), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Atualiza as informações de uma campanha")
+
+	@ApiOperation(value = "Atualiza campanha", notes = "Atualiza as informações de uma campanha")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Ranking criado", response = List.class),
+			@ApiResponse(code = 401, message = "Usuário não autenticado ou sem permissão de acesso"),
+			@ApiResponse(code = 404, message = "Nehuma campanha encontrada")
+	})
 	@PutMapping("/{identificadorURL}")
 	public ResponseEntity<Campanha> updateCampanha(@PathVariable String identificadorURL, @RequestBody CampanhaDTO campanhaDTO, @RequestHeader("Authorization") String header){
 		Optional<Campanha> optCampanha = this.campanhaService.findByIdURL(identificadorURL);
