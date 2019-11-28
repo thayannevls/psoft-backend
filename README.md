@@ -1,15 +1,28 @@
 # AJuDE API
 > Projeto backend de PSOFT
 
+## Links
+- Swagger: https://ajudeapi.herokuapp.com/api/v1/swagger-ui.html#/
+- API: https://ajudeapi.herokuapp.com/api/v1/
+- Frontend: https://thayannevls.github.io/psoft-frontend/
+- Vídeo: https://youtu.be/F6RW42qMXXM
+
+## Conta pré criada
+
+**Usuário:** thayanne.sousa@ccc.ufcg.edu.br
+**Senha:** 12345
+
 ## Como rodar
 
 `./mvnw spring-boot:run`
 
-## Endpoints
+## Sobre
 
- Endpoint   |     Método      |  Descrição |
-|----------|:----------:|----------|
-| `/v1/api/campanha/` |  **GET** | Retorna todas as campanhas |
+Implementamos uma API para o sistema AJuDE seguindo o padrão REST e tentando aplicar as melhores práticas de Spring+JPA+Java. Para isso, dividimos nossa arquitetura entre `controllers`, `repositories`, `models`, `DTO`s e `services`. Cada package corresponde a um recurso, onde contém seu controller, repostiry, model, DTOs e service. Podendo também conter sub-packages de sub-recursos.
+
+Usamos exceções para retornar erros HTTP nas situações que se faziam necessários, e DTOs para proteger nossa API e também para dar uma melhor resposta para nosso usuário.
+
+Também usamos JWT Token para realizar a autenticação.
 
 ## Grupo
 
