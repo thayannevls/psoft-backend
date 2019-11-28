@@ -1,7 +1,13 @@
 package psoft.ufcg.api.AJuDE.campanha.like;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "Objeto de transferência de likes", description = "Objeto que encapsula os dados de um like, utilizado para transferi-los pela rede")
 public class LikeResponseDTO {
+	@ApiModelProperty(value = "Like efetuado", example = "3124", position = 0)
 	private Like like;
+	@ApiModelProperty(value = "Ação a ser executada sobre o Like", example = "add", position = 1)
 	private String action;
 	
 	private LikeResponseDTO(Like like, String action) {
