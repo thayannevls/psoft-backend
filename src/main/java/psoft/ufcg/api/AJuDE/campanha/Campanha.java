@@ -34,7 +34,7 @@ import psoft.ufcg.api.AJuDE.usuario.Usuario;
  */
 
 
-@ApiModel(value = "Campanha", description = "Modelo de uma campanha. Esse modelo representa a entidade camapanha no banco de dados e possui as funções básicas de getters e setters para seus atributos.")
+@ApiModel(value = "Campanha", description = "Modelo de uma campanha. Esse modelo representa a entidade campanha no banco de dados e possui as funções básicas de getters e setters para seus atributos.")
 @Entity
 @Table(name = "tb_campanha")
 public class Campanha {
